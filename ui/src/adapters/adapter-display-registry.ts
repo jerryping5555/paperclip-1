@@ -90,16 +90,19 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     label: "Gemini CLI",
     description: "Gemini CLI harness",
     icon: Gem,
+    recommended: true,
   },
   grok_local: {
     label: "Grok Build",
     description: "Grok Build harness",
     icon: Bot,
+    recommended: true,
   },
   kimi_local: {
     label: "Kimi Code",
     description: "Kimi Code CLI harness",
     icon: Moon,
+    recommended: true,
   },
   hermes_gateway: {
     label: "Hermes Gateway",
@@ -116,16 +119,19 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     label: "OpenCode",
     description: "OpenCode multi-provider harness",
     icon: OpenCodeLogoIcon,
+    recommended: true,
   },
   pi_local: {
     label: "Pi",
     description: "Pi harness",
     icon: Terminal,
+    recommended: true,
   },
   cursor: {
     label: "Cursor",
     description: "Cursor CLI harness",
     icon: MousePointer2,
+    recommended: true,
   },
   cursor_cloud: {
     label: "Cursor Cloud",

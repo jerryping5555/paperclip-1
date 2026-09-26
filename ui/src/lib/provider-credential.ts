@@ -8,6 +8,10 @@ export const PROVIDER_ENV_KEYS: Record<string, string> = {
   xai: "XAI_API_KEY",
   groq: "GROQ_API_KEY",
   opencode: "OPENCODE_API_KEY",
+  // Multi-provider harness providers (OpenCode/Pi) so a picked `zai/*` or
+  // `nvidia/*` model can also be driven by a key instead of a host sign-in.
+  zai: "ZAI_API_KEY",
+  nvidia: "NVIDIA_API_KEY",
 };
 
 /** New organization credentials get a distinct key; never rotate another agent's secret. */

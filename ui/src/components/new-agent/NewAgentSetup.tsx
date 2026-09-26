@@ -142,14 +142,21 @@ function Setup({
   const [environmentOverride, setEnvironmentOverride] = useState("");
   const [provider, setProvider] = useState("openrouter");
   const [apiKey, setApiKey] = useState("");
+  // Multi-provider harnesses (OpenCode, Pi) default to the environment host's
+  // own sign-ins; their API-key fields are an opt-in like onboarding's
+  // credential-mode link, so a host-sign-in operator is never asked to pick a
+  // provider and paste a key they do not have.
+  const [apiKeyMode, setApiKeyMode] = useState(false);
   const [providerBinding, setProviderBinding] = useState<EnvBinding | null>(
     null,
   );
-  const [runtimeAiBinding, setRuntimeAiBinding] = useState<AiConnectionBinding | undefined>(() =>
-    brandType === "opencode_local"
-      ? { provider: "openrouter", method: "api_key", mode: "responsible_user" }
-      : undefined,
-  );
+  // OpenCode (and Pi) authenticate through the harness's own sign-ins on the
+  // environment host (`opencode auth login`), so the wizard starts with no
+  // managed connection. Forcing an OpenRouter binding here stranded operators
+  // whose working credential is the host sign-in: the binding hid the plain
+  // credential fields below and later failed every run with a missing
+  // OpenRouter default. A managed connection is still selectable above.
+  const [runtimeAiBinding, setRuntimeAiBinding] = useState<AiConnectionBinding>();
   const [connection, setConnection] = useState<ProviderConnection | null>(null);
   const aiBinding = runtimeAiBinding ?? connection?.aiConnection;
   const [repository, setRepository] = useState("");
@@ -214,7 +221,25 @@ function Setup({
   });
   const models = useQuery({
     queryKey: queryKeys.agents.adapterModels(companyId, brandType, null, aiBinding?.provider),
-    queryFn: () => agentsApi.adapterModels(companyId, brandType, { provider: aiBinding?.provider }),
+    // Mirror onboarding's connect step: without a managed connection, local
+    // discovery refreshes the harness's on-disk catalog first — `opencode
+    // models` reads a persistent cache that can lag behind both the models.dev
+    // catalog and the operator's own opencode.json providers, and this is the
+    // screen where a missing model reads as "my model is not supported". If
+    // the refresh cannot run, fall back to the cached list rather than
+    // failing the step.
+    queryFn: async () => {
+      if (aiBinding?.provider)
+        return agentsApi.adapterModels(companyId, brandType, { provider: aiBinding.provider });
+      if (multiProvider) {
+        try {
+          return await agentsApi.adapterModels(companyId, brandType, { refresh: true });
+        } catch {
+          return agentsApi.adapterModels(companyId, brandType, {});
+        }
+      }
+      return agentsApi.adapterModels(companyId, brandType, {});
+    },
     enabled: Boolean(brandType) && showModel,
     retry: false,
   });
@@ -274,8 +299,11 @@ function Setup({
   const savedOrganizationKey = companySecrets.data?.find(
     (entry) => entry.key === envKey && entry.status === "active",
   );
+  // In the multi-provider harness (host sign-in) mode, no saved credential is
+  // bound silently: the harness authenticates itself, and injecting a stored
+  // OPENROUTER_API_KEY for a zai/* or nvidia/* model would only mislead.
   const selectedBinding =
-    adapterType === "cursor_cloud"
+    adapterType === "cursor_cloud" || (multiProvider && !apiKeyMode)
       ? null
       : (providerBinding ??
         (savedOrganizationKey
@@ -823,6 +851,10 @@ function Setup({
                             </div>
                           ) : (
                             <AiConnectionField companyId={companyId} agentName={name} adapterType={brandType} model={model} environmentId={environmentId ?? undefined} value={aiBinding}
+                              allowNone={multiProvider}
+                              noneName="Use the environment’s OpenCode sign-in"
+                              noneDescription={<>Runs with the model providers already signed in on the environment host (<code>opencode auth login</code>).</>}
+                              onClear={() => { setRuntimeAiBinding(undefined); resetTest(); }}
                               onChange={binding => { setRuntimeAiBinding(binding); resetTest(); }} />
                           )
                         )}
@@ -896,37 +928,58 @@ function Setup({
                             manually.
                           </p>
                         )}
-                        {hasCredentialField && !aiBinding && (
-                          <div className="grid gap-5 sm:grid-cols-2">
-                            {chooseProvider && (
-                              <Field label="API key provider">
-                                <select
-                                  aria-label="API key provider"
-                                  className={controlClass}
-                                  value={provider}
-                                  onChange={(event) => {
-                                    setProvider(event.target.value);
-                                    setModel("");
-                                    setApiKey("");
-                                    setProviderBinding(null);
-                                    resetTest();
-                                  }}
-                                >
-                                  {Object.keys(providerKeys).map((key) => (
-                                    <option key={key} value={key}>
-                                      {key === "openrouter"
-                                        ? "OpenRouter"
-                                        : key === "openai"
-                                          ? "OpenAI"
-                                          : key === "anthropic"
-                                            ? "Anthropic"
-                                            : ({
-                                                google: "Google",
-                                                xai: "xAI",
-                                                groq: "Groq",
-                                                opencode: "OpenCode",
-                                              }[key] ?? key)}
-                                    </option>
+                         {multiProvider && !aiBinding && (
+                           <button
+                             type="button"
+                             className="w-fit text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                             onClick={() => {
+                              const next = !apiKeyMode;
+                              setApiKeyMode(next);
+                              if (!next) {
+                                setApiKey("");
+                                setProviderBinding(null);
+                              }
+                              resetTest();
+                            }}
+                           >
+                             {apiKeyMode
+                               ? "Use the environment’s OpenCode sign-in instead"
+                               : "Use an API key instead"}
+                           </button>
+                         )}
+                         {hasCredentialField && !aiBinding && (!multiProvider || apiKeyMode) && (
+                           <div className="grid gap-5 sm:grid-cols-2">
+                             {chooseProvider && (
+                               <Field label="API key provider">
+                                 <select
+                                   aria-label="API key provider"
+                                   className={controlClass}
+                                   value={provider}
+                                   onChange={(event) => {
+                                     setProvider(event.target.value);
+                                     setModel("");
+                                     setApiKey("");
+                                     setProviderBinding(null);
+                                     resetTest();
+                                   }}
+                                 >
+                                   {Object.keys(providerKeys).map((key) => (
+                                     <option key={key} value={key}>
+                                       {key === "openrouter"
+                                         ? "OpenRouter"
+                                         : key === "openai"
+                                           ? "OpenAI"
+                                           : key === "anthropic"
+                                             ? "Anthropic"
+                                             : ({
+                                                 google: "Google",
+                                                 xai: "xAI",
+                                                 groq: "Groq",
+                                                 opencode: "OpenCode",
+                                                 zai: "Z.ai (GLM)",
+                                                 nvidia: "NVIDIA NIM",
+                                               }[key] ?? key)}
+                                     </option>
                                   ))}
                                 </select>
                               </Field>

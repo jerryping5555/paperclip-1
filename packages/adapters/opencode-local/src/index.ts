@@ -101,6 +101,10 @@ Core fields:
 Operational fields:
 - timeoutSec (number, optional): run timeout in seconds
 - graceSec (number, optional): SIGTERM grace period in seconds
+- fallbackModels (string[], optional): provider/model ids to rotate to — in the
+  same session — when the configured model is exhausted (rate limits, depleted
+  credits/quotas). Every run still starts on the primary model, so recovery is
+  automatic; auth and config errors never rotate.
 
 Notes:
 - OpenCode supports multiple providers and models. Use \

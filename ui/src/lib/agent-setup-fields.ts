@@ -50,6 +50,8 @@ export const SETUP_LOGIN_HINTS: Record<string, string> = {
     "Use a Gemini API key, or an existing supported Gemini CLI login on the selected environment's host.",
   kimi_local:
     "Use a Kimi API key and model settings below, or run kimi login on the selected environment's host.",
+  opencode_local:
+    "OpenCode uses its own provider sign-ins on the environment host. Run opencode auth login there and pick a provider/model below; a managed OpenRouter connection is optional.",
   grok_local:
     "Grok Build uses its CLI sign-in. Run grok login on the selected environment's host, then test the connection here.",
   hermes_local:

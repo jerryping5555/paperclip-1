@@ -251,6 +251,12 @@ const MODEL_SOURCE_INLINE_MARKS: Record<string, ComponentType<{ className?: stri
 const API_KEY_ENV_KEYS: Record<string, string> = {
   claude_local: ANTHROPIC_API_KEY_ENV_KEY,
   codex_local: "OPENAI_API_KEY",
+  gemini_local: "GEMINI_API_KEY",
+  grok_local: "XAI_API_KEY",
+  kimi_local: "KIMI_MODEL_API_KEY",
+  opencode_local: "OPENROUTER_API_KEY",
+  pi_local: "OPENROUTER_API_KEY",
+  cursor: "CURSOR_API_KEY",
 };
 
 function apiKeyEnvKeyFor(adapterType: string): string {
@@ -651,10 +657,15 @@ function OnboardingWizardInner({
    * picked keys, left, and came back should not be handed a sign-in panel they
    * already said no to.
    */
+  // Restore only the *choice*, never the derived mode. The draft also carries
+  // the last computed `credentialMode`, and restoring that would pin whatever
+  // the defaults of an older build computed — a draft saved when API mode was
+  // the default for a source keeps demanding a key the customer never chose to
+  // give, through every new build, with no visible control that says so.
   const [credentialModeChoice, setCredentialMode] = useState<CredentialMode | null>(
-    (saved?.credentialModeChoice !== undefined
+    saved?.credentialModeChoice !== undefined
       ? saved.credentialModeChoice as CredentialMode | null
-      : saved?.credentialMode as CredentialMode | undefined) ?? null,
+      : null,
   );
   /**
    * Where the connect step's sign-in sequence is.
@@ -710,7 +721,7 @@ function OnboardingWizardInner({
   const selectedApiKey = savedKeys.options.find((option) => option.id === selectedApiKeyId);
   const credentialMode = credentialModeChoice ?? (
     (savedKeys.subscriptions.length > 0 || (adapterType === "claude_local" && savedKeys.storedLogin.data))
-      ? "subscription" : savedKeys.options.length || adapterType === "opencode_local" ? "api" : "subscription"
+      ? "subscription" : savedKeys.options.length ? "api" : "subscription"
   );
   const [createdCompanyPrefix, setCreatedCompanyPrefix] = useState<
     string | null
@@ -762,6 +773,18 @@ function OnboardingWizardInner({
   const apiKeySecretRef = useRef<{ key: string; companyId: string; envKey: string; binding?: Awaited<ReturnType<typeof storeProviderApiKey>>["binding"]; aiConnection?: AiConnectionBinding } | null>(null);
   const managedSubscriptionRef = useRef<{ companyId: string; binding: AiConnectionBinding } | null>(null);
   const managedProvider = aiProviderForAdapter(adapterType);
+  /**
+   * The managed provider as the current credential mode actually uses it.
+   * OpenCode's and Pi's managed provider (OpenRouter) is an API-key
+   * affordance only. Their sign-in path is the harness's own auth on the
+   * environment host — `opencode auth login` — not a Paperclip AI connection,
+   * so the subscription machinery must not fire for them. Mixing the two is
+   * how a customer with a working host sign-in ends up staring at a key field.
+   */
+  const managedProviderForMode =
+    (adapterType === "opencode_local" || adapterType === "pi_local") && credentialMode !== "api"
+      ? undefined
+      : managedProvider;
   function managedBindingForStep(): AiConnectionBinding | undefined {
     if (credentialMode === "api") return selectedApiKey?.aiConnection ?? (
       !selectedApiKey && apiKeySecretRef.current?.companyId === createdCompanyId && apiKeySecretRef.current.envKey === apiKeyEnvKeyFor(adapterType)
@@ -918,6 +941,20 @@ function OnboardingWizardInner({
     createdCompanyGoalId, createdProjectId, createdIssueRef,
   ]);
 
+  // The provider whose catalog the model picker lists. Host sign-in is the
+  // default for every source; the API mode is the opt-in OpenRouter path, and
+  // there the picker lists OpenRouter's public catalog so `openrouter/...`
+  // models are choosable before anything is authenticated on the environment.
+  // Without the param, discovery asks the environment's own `opencode models`,
+  // which knows exactly the providers the host signed in — the right list for
+  // the default mode.
+  const wizardModelProvider =
+    adapterType === "opencode_local" && credentialMode === "api"
+      ? "openrouter"
+      : undefined;
+  const adapterModelsKey = createdCompanyId
+    ? queryKeys.agents.adapterModels(createdCompanyId, adapterType, null, wizardModelProvider)
+    : ["agents", "none", "adapter-models", adapterType, null, wizardModelProvider ?? null];
   const {
     data: adapterModels,
     error: adapterModelsError,
@@ -926,10 +963,24 @@ function OnboardingWizardInner({
   } = useQuery({
     // The wizard doesn't expose an environment selector, so models always
     // resolve against the local Paperclip host (environmentId = null).
-    queryKey: createdCompanyId
-      ? queryKeys.agents.adapterModels(createdCompanyId, adapterType, null)
-      : ["agents", "none", "adapter-models", adapterType, null],
-    queryFn: () => agentsApi.adapterModels(createdCompanyId!, adapterType, { environmentId: null }),
+    queryKey: adapterModelsKey,
+    // Local discovery refreshes the harness's on-disk model catalog first:
+    // `opencode models` reads a persistent cache that can lag behind the
+    // catalog (new models silently missing), and onboarding is the one screen
+    // where a missing model reads as "my model is not supported". The refresh
+    // costs one extra enumeration; if it cannot run — an offline host, a
+    // sandbox without egress — fall back to the cached list rather than
+    // failing the step.
+    queryFn: async () => {
+      if (wizardModelProvider) {
+        return agentsApi.adapterModels(createdCompanyId!, adapterType, { environmentId: null, provider: wizardModelProvider });
+      }
+      try {
+        return await agentsApi.adapterModels(createdCompanyId!, adapterType, { environmentId: null, refresh: true });
+      } catch {
+        return agentsApi.adapterModels(createdCompanyId!, adapterType, { environmentId: null });
+      }
+    },
     // Models are picked on step 4 (Connect a model).
     enabled: Boolean(createdCompanyId) && effectiveOnboardingOpen && step === 4
   });
@@ -1016,11 +1067,11 @@ function OnboardingWizardInner({
   const localLoginHealth = useQuery({ queryKey: queryKeys.health, queryFn: healthApi.get });
   const canUseLocalLogin = resolvedLoginEnvironment?.driver === "local" && (localLoginHealth.data?.localAiLoginSupported ?? localLoginHealth.data?.deploymentMode === "local_trusted");
   const localLogin = useLocalAiLogin(createdCompanyId, {
-    provider: managedProvider ?? "anthropic", method: "subscription",
+    provider: managedProviderForMode ?? "anthropic", method: "subscription",
     name: `My ${CONNECT_SOURCE_NAMES[adapterType] ?? managedProvider} subscription`,
     ownership: "personal", agentIds: [], allAgents: true,
   }, effectiveOnboardingOpen && step === 4 && canUseLocalLogin && credentialMode !== "api" &&
-    Boolean(managedProvider) && !savedSubscription && !savedKeys.storedLogin.data && !managedBindingForStep(),
+    Boolean(managedProviderForMode) && !savedSubscription && !savedKeys.storedLogin.data && !managedBindingForStep(),
   { allowHostClaude: localLoginHealth.data?.deploymentMode === "local_trusted" });
   // A result from a previous selection must not hire or advance this wizard.
   // Environment query updates are not user navigation: the test resolves its
@@ -1497,10 +1548,11 @@ function OnboardingWizardInner({
     // unofferable, so the question is open again.
     setSourcePicked(false);
     if (next === "codex_local") return;
-    if (next === "opencode_local") {
-      setModel(DEFAULT_OPENCODE_LOCAL_MODEL);
-      return;
-    }
+    // OpenCode and Pi front many providers, so no model is pre-held for them:
+    // the picker below lists what the environment can actually reach and the
+    // choice is the customer's. Pre-holding "openai/…" hired against a provider
+    // the customer never chose.
+    if (next === "opencode_local" || next === "pi_local") return;
     if (next === "gemini_local") {
       setModel(DEFAULT_GEMINI_LOCAL_MODEL);
       return;
@@ -1612,6 +1664,27 @@ function OnboardingWizardInner({
         entries: [...entries].sort((a, b) => a.id.localeCompare(b.id))
       }));
   }, [filteredModels, adapterType]);
+
+  /**
+   * Sources whose provider is not fixed by the tile. OpenCode and Pi front many
+   * providers (zai, openrouter, google, …), so the model is a real choice here
+   * rather than an implementation detail the harness resolves on its own — and
+   * the hire validates the choice against what the environment discovered.
+   */
+  const multiProviderSource =
+    adapterType === "opencode_local" || adapterType === "pi_local";
+  const discoveredModelIds = new Set((adapterModels ?? []).map((entry) => entry.id));
+
+  /**
+   * Who actually issued the key this step stores. "OpenCode" front many
+   * providers and issue no key of their own — the credential the card takes is
+   * an OpenRouter one (the managed provider for these harnesses), so the card
+   * must say OpenRouter, not the harness name. Sources with no managed
+   * provider keep their source name: a Gemini key is a Gemini key.
+   */
+  const apiKeySourceName = managedProvider === "openrouter"
+    ? "OpenRouter"
+    : CONNECT_SOURCE_NAMES[adapterType] ?? adapterType;
 
   function reset() {
     onboardingDraftStorage.clear();
@@ -2038,6 +2111,37 @@ function OnboardingWizardInner({
     setLoading(true);
     setError(null);
     try {
+      // Onboarding applies a stored Claude subscription login automatically,
+      // with no extra control. A new user who signs in, leaves, and returns
+      // should not sign in a second time — that is the board's direction.
+      // The binding is a reference to the owner's stored value, never the
+      // value itself (see buildFixedClaudeOAuthBinding). The server rejects
+      // that binding together with a configured ANTHROPIC_API_KEY, so this
+      // checks the built configuration first and asks the status route only
+      // when there is no such conflict.
+      //
+      // Read the stored-login status before the environment test below, and
+      // fold it into one adapter configuration. The test must probe the same
+      // configuration the hire sends — a config without the binding can
+      // report missing authentication for a user the binding would have
+      // covered.
+      //
+      // The key is stored before the multi-provider model gate below runs, on
+      // purpose: discovery on a fresh environment sees no models until the
+      // credential exists, so gating first would block the very customer the
+      // key is for. Storing, refetching, then validating lets one Connect do
+      // what used to need a shell on the environment host.
+      let apiKeyStored = false;
+      if (credentialMode === "api" && !selectedApiKey && apiKey.trim()) {
+        apiKeyStored = await storeApiKeyUserSecret(createdCompanyId);
+        if (!apiKeyStored || !isCurrent()) return;
+        if (multiProviderSource) {
+          await queryClient.invalidateQueries({
+            queryKey: ["agents", createdCompanyId, "adapter-models", adapterType],
+          });
+          if (!isCurrent()) return;
+        }
+      }
       if (adapterType === "opencode_local") {
         const selectedModelId = model.trim();
         if (!isValidOpenCodeModelId(selectedModelId)) {
@@ -2060,7 +2164,12 @@ function OnboardingWizardInner({
           );
           return;
         }
-        const discoveredModels = adapterModels ?? [];
+        // The closure's `adapterModels` is the render's snapshot; after the
+        // refetch above the cache is the only fresh copy.
+        const discoveredModels =
+          (createdCompanyId
+            ? queryClient.getQueryData<Array<{ id: string }>>(adapterModelsKey)
+            : null) ?? adapterModels ?? [];
         if (!discoveredModels.some((entry) => entry.id === selectedModelId)) {
           setError(
             discoveredModels.length === 0
@@ -2070,33 +2179,10 @@ function OnboardingWizardInner({
           return;
         }
       }
-
-      // Onboarding applies a stored Claude subscription login automatically,
-      // with no extra control. A new user who signs in, leaves, and returns
-      // should not sign in a second time — that is the board's direction.
-      // The binding is a reference to the owner's stored value, never the
-      // value itself (see buildFixedClaudeOAuthBinding). The server rejects
-      // that binding together with a configured ANTHROPIC_API_KEY, so this
-      // checks the built configuration first and asks the status route only
-      // when there is no such conflict.
-      //
-      // Read the stored-login status before the environment test below, and
-      // fold it into one adapter configuration. The test must probe the same
-      // configuration the hire sends — a config without the binding can
-      // report missing authentication for a user the binding would have
-      // covered.
-      // Store the key before anything is built from it, so both the probe and the
-      // hire describe it the same way — as a reference. A failure here stops the
-      // hire rather than falling through to a configuration with no credential.
-      let apiKeyStored = false;
-      if (credentialMode === "api" && !selectedApiKey && apiKey.trim()) {
-        apiKeyStored = await storeApiKeyUserSecret(createdCompanyId);
-        if (!apiKeyStored || !isCurrent()) return;
-      }
-      if (credentialMode !== "api" && canUseLocalLogin && managedProvider && !managedBindingForStep() && !savedSubscription && !savedKeys.storedLogin.data) {
+      if (credentialMode !== "api" && canUseLocalLogin && managedProviderForMode && !managedBindingForStep() && !savedSubscription && !savedKeys.storedLogin.data) {
         await localLogin.connect();
         if (!isCurrent()) return;
-        managedSubscriptionRef.current = { companyId: createdCompanyId, binding: { provider: managedProvider, method: "subscription", mode: "responsible_user" } };
+        managedSubscriptionRef.current = { companyId: createdCompanyId, binding: { provider: managedProviderForMode, method: "subscription", mode: "responsible_user" } };
       }
       const managedBinding = managedBindingForStep();
       const baseAdapterConfig = buildAdapterConfig(apiKeyStored);
@@ -2686,15 +2772,17 @@ function OnboardingWizardInner({
                       }
                       collapsed={connectCollapsed}
                       settling={connectPhase === "unwindRow"}
-                      onSelect={(id) => {
-                        if (connectPhase !== "idle") return;
-                        autoConnectStartedRef.current = false;
-                        setSourcePicked(true);
-                        setAdapterType(id);
-                        if (id === "opencode_local") setModel(DEFAULT_OPENCODE_LOCAL_MODEL);
-                        else if (id !== "codex_local") setModel("");
-                        setConnectPhase("collapsing");
-                      }}
+                       onSelect={(id) => {
+                         if (connectPhase !== "idle") return;
+                         autoConnectStartedRef.current = false;
+                         setSourcePicked(true);
+                         setAdapterType(id);
+                         // Codex keeps its remembered model; every other source
+                         // re-answers the question — and the multi-provider
+                         // sources answer it in the model picker, not here.
+                         if (id !== "codex_local") setModel("");
+                         setConnectPhase("collapsing");
+                       }}
                     />
 
                     {/* Fades on the first beat but keeps its space until the
@@ -2770,9 +2858,7 @@ function OnboardingWizardInner({
                       </p>
                     ) : credentialMode === "api" ? (
                       <OnboardingLoginCard
-                        instruction={savedKeys.options.length ? "Choose a saved API key or enter a new one" : `Provide your ${
-                          CONNECT_SOURCE_NAMES[adapterType] ?? adapterType
-                        } API key to connect`}
+                        instruction={savedKeys.options.length ? "Choose a saved API key or enter a new one" : `Provide your ${apiKeySourceName} API key to connect`}
                       >
                         <SavedProviderKeySelect {...savedKeys} disabled={loading || adapterEnvLoading} value={selectedApiKey?.id ?? ""} onChange={(id) => {
                           setSelectedSavedKey(createdCompanyId ? { companyId: createdCompanyId, envKey: apiKeyEnvKeyFor(adapterType), id } : null);
@@ -2889,18 +2975,57 @@ function OnboardingWizardInner({
                         }}
                       />
                     ) : hasSavedSubscription || localLogin.status === "ready" ? null : connectStepHasNoSandbox ? (
-                      canUseLocalLogin && managedProvider ? (
-                        <LocalProviderLoginInstructions adapterType={adapterType} login={{ ...localLogin, retry: () => { autoConnectStartedRef.current = false; setError(null); localLogin.retry(); } }} />
+                      canUseLocalLogin && (managedProviderForMode || adapterType === "opencode_local" || adapterType === "pi_local") ? (
+                        <LocalProviderLoginInstructions
+                          adapterType={adapterType}
+                          login={managedProviderForMode ? { ...localLogin, retry: () => { autoConnectStartedRef.current = false; setError(null); localLogin.retry(); } } : undefined}
+                        />
                       ) : <p className="text-xs text-muted-foreground">This environment does not support browser sign-in. Choose another sign-in environment or connect with an API key.</p>
                     ) : null}
                   </motion.div>
 
                   {/* Conditional adapter fields */}
-                  {/* No model picker. Every adapter this step offers resolves
-                      its own default (see buildAdapterConfig), so the picker
-                      asked the customer to choose a model before they had any
-                      way to judge one — and the agent's model is changeable
-                      later, where its work gives the choice meaning. */}
+                  {/* The one exception to "no model picker": multi-provider
+                      sources. OpenCode and Pi front many providers — zai,
+                      google, openrouter — so the model is a real choice, listed
+                      from what this environment can actually reach, and the
+                      hire validates the pick. Every other source resolves its
+                      own default; their model is changeable later, where the
+                      work gives the choice meaning. */}
+                  {multiProviderSource && sourceSelected && filteredModels.length > 0 && (
+                    <div className="-ml-3">
+                      <label className="block space-y-2">
+                        <span className="text-sm">Model</span>
+                        {/* Grouped by provider, because that is the choice the
+                            customer actually made — zai, google, openrouter —
+                            and a flat list of provider/model ids buries it. The
+                            placeholder keeps the pick a real answer rather than
+                            a preselected suggestion. */}
+                        <select
+                          aria-label="Model"
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                          value={discoveredModelIds.has(model) ? model : ""}
+                          onChange={(event) => setModel(event.target.value)}
+                          disabled={loading || adapterEnvLoading}
+                        >
+                          {!discoveredModelIds.has(model) && (
+                            <option value="" disabled>Select a model</option>
+                          )}
+                          {adapterType === "opencode_local"
+                            ? groupedModels.map((group) => (
+                                <optgroup key={group.provider} label={group.provider}>
+                                  {group.entries.map((entry) => (
+                                    <option key={entry.id} value={entry.id}>{entry.label}</option>
+                                  ))}
+                                </optgroup>
+                              ))
+                            : groupedModels[0]!.entries.map((entry) => (
+                                <option key={entry.id} value={entry.id}>{entry.label}</option>
+                              ))}
+                        </select>
+                      </label>
+                    </div>
+                  )}
 
                   {/* Progress is shown above; failed checks remain actionable here. */}
                   {/* Not while the hire is in flight. The probe's result lands

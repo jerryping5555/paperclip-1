@@ -60,7 +60,7 @@ import {
 } from "./models.js";
 import { removeMaintainerOnlySkillSymlinks } from "@paperclipai/adapter-utils/server-utils";
 import { prepareOpenCodeRuntimeConfig, prepareManagedOpenCodeRemoteHomes } from "./runtime-config.js";
-import { SANDBOX_INSTALL_COMMAND } from "../index.js";
+import { SANDBOX_INSTALL_COMMAND, isValidOpenCodeModelId } from "../index.js";
 import { resolveOpenCodeSkillsHome } from "./skills.js";
 
 const __moduleDir = path.dirname(fileURLToPath(import.meta.url));
@@ -79,6 +79,63 @@ function parseModelProvider(model: string | null): string | null {
   const trimmed = model.trim();
   if (!trimmed.includes("/")) return null;
   return trimmed.slice(0, trimmed.indexOf("/")).trim() || null;
+}
+
+/**
+ * Optional `adapterConfig.fallbackModels`: provider/model ids to rotate to
+ * when the configured model is exhausted mid-run (rate limits, depleted
+ * credits/quotas). Entries must be valid `provider/model` ids, are deduped,
+ * and never include the primary. The primary stays configured — every new run
+ * starts on it, so recovery is automatic once the quota refreshes.
+ */
+function parseFallbackModelIds(config: Record<string, unknown>, primary: string): string[] {
+  const raw = (config as { fallbackModels?: unknown }).fallbackModels;
+  if (!Array.isArray(raw)) return [];
+  const seen = new Set([primary.trim()]);
+  const ids: string[] = [];
+  for (const entry of raw) {
+    if (typeof entry !== "string") continue;
+    const id = entry.trim();
+    if (!id || seen.has(id) || !isValidOpenCodeModelId(id)) continue;
+    seen.add(id);
+    ids.push(id);
+  }
+  return ids;
+}
+
+// Signatures of provider-side quota/rate-limit exhaustion as surfaced through
+// `opencode run` (parsed JSONL error, stderr, or the stdout tail).
+// Conservative on purpose: only a quota-classified failure rotates to a
+// fallback model; every other failure keeps the existing fail-fast behavior.
+// Covers numeric codes (429 quota windows, 402 depleted funds), English
+// phrases, and the Chinese messages some providers (e.g. z.ai) return. The
+// CJK alternatives carry no \b boundaries: without the `u` flag CJK
+// characters are non-word characters, so \b never matches around them.
+const QUOTA_EXHAUSTION_PATTERN = /(?:\b(?:429|402|rate.?limit|too many requests|quota|insufficient|out of credits?|RESOURCE_EXHAUSTED|over.?quota|usage limit|limit exceeded|funds)\b|使用上限|限额|余额不足)/i;
+
+function quotaEvidence(stdout: string, stderr: string, parsedError: string): string {
+  return (
+    firstNonEmptyLine(parsedError) ||
+    firstNonEmptyLine(stderr) ||
+    firstNonEmptyLine(stdout.slice(-2000)) ||
+    "no error detail"
+  );
+}
+
+function isProviderQuotaExhausted(stdout: string, stderr: string, parsedError: string): boolean {
+  const haystack = `${parsedError}\n${stdout.slice(-20000)}\n${stderr.slice(-20000)}`;
+  return QUOTA_EXHAUSTION_PATTERN.test(haystack);
+}
+
+function isFailedAttempt(attempt: {
+  proc: { exitCode: number | null; timedOut: boolean };
+  parsed: { errorMessage?: unknown };
+}): boolean {
+  return (
+    !attempt.proc.timedOut &&
+    ((attempt.proc.exitCode ?? 0) !== 0 ||
+      (typeof attempt.parsed.errorMessage === "string" && attempt.parsed.errorMessage.trim().length > 0))
+  );
 }
 
 function resolveOpenCodeBiller(env: Record<string, string>, provider: string | null): string {
@@ -238,6 +295,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
   const command = asString(config.command, "opencode");
   const model = asString(config.model, "").trim();
   const variant = asString(config.variant, "").trim();
+  const fallbackModelIds = parseFallbackModelIds(config, model);
+  const availableFallbackModels: string[] = [];
 
   const workspaceContext = parseObject(context.paperclipWorkspace);
   const workspaceCwd = asString(workspaceContext.cwd, "");
@@ -368,6 +427,26 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         cwd,
         env: runtimeEnv,
       });
+      // Fallback models are best-effort: an unavailable fallback must not fail
+      // a run whose primary is fine, so probe failures drop the entry with a
+      // run note instead of aborting.
+      for (const fallbackModel of fallbackModelIds) {
+        try {
+          await ensureOpenCodeModelConfiguredAndAvailable({
+            model: fallbackModel,
+            command,
+            cwd,
+            env: runtimeEnv,
+          });
+          availableFallbackModels.push(fallbackModel);
+        } catch (err) {
+          const reason = err instanceof Error ? err.message : String(err);
+          await onLog(
+            "stdout",
+            `[paperclip] Fallback model "${fallbackModel}" is unavailable and will be skipped this run: ${reason}\n`,
+          );
+        }
+      }
     }
 
     const extraArgs = (() => {
@@ -471,6 +550,27 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         timeoutSec,
         graceSec,
       });
+      for (const fallbackModel of fallbackModelIds) {
+        try {
+          await ensureRemoteOpenCodeModelConfiguredAndAvailable({
+            runId,
+            executionTarget,
+            command,
+            model: fallbackModel,
+            cwd,
+            env: preparedRuntimeConfig.env,
+            timeoutSec,
+            graceSec,
+          });
+          availableFallbackModels.push(fallbackModel);
+        } catch (err) {
+          const reason = err instanceof Error ? err.message : String(err);
+          await onLog(
+            "stdout",
+            `[paperclip] Fallback model "${fallbackModel}" is unavailable on the remote execution target and will be skipped this run: ${reason}\n`,
+          );
+        }
+      }
     }
     const runtimeExecutionTarget = overrideAdapterExecutionTargetRemoteCwd(executionTarget, effectiveExecutionCwd);
     if (executionTargetIsRemote && adapterExecutionTargetUsesPaperclipBridge(runtimeExecutionTarget)) {
@@ -610,22 +710,22 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     const printLogs = isTruthyEnvFlag(
       env.PAPERCLIP_OPENCODE_PRINT_LOGS ?? process.env.PAPERCLIP_OPENCODE_PRINT_LOGS,
     );
-    const buildArgs = (resumeSessionId: string | null) => {
+    const buildArgs = (resumeSessionId: string | null, attemptModel: string) => {
       const args = ["run", "--format", "json"];
       if (printLogs) args.push("--print-logs");
       if (resumeSessionId) args.push("--session", resumeSessionId);
-      if (model) args.push("--model", model);
+      if (attemptModel) args.push("--model", attemptModel);
       if (variant) args.push("--variant", variant);
       if (extraArgs.length > 0) args.push(...extraArgs);
       return args;
     };
 
-    const runAttempt = async (resumeSessionId: string | null) => {
+    const runAttempt = async (resumeSessionId: string | null, attemptModel: string) => {
       const prompt = joinPromptSections([
         selectInitialCommunicationGuidance(context, { resumedSession: Boolean(resumeSessionId) }),
         basePrompt,
       ]);
-      const args = buildArgs(resumeSessionId);
+      const args = buildArgs(resumeSessionId, attemptModel);
       if (onMeta) {
         await onMeta({
           adapterType: "opencode_local",
@@ -665,7 +765,8 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         rawStderr: string;
         parsed: ReturnType<typeof parseOpenCodeJsonl>;
       },
-      clearSessionOnMissingSession = false,
+      clearSessionOnMissingSession: boolean,
+      attemptModel: string,
     ): AdapterExecutionResult => {
       if (attempt.proc.timedOut) {
         return {
@@ -703,7 +804,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
         parsedError ||
         stderrLine ||
         `OpenCode exited with code ${synthesizedExitCode ?? -1}`;
-      const modelId = model || null;
+      const modelId = attemptModel || null;
 
       return {
         exitCode: synthesizedExitCode,
@@ -737,23 +838,41 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
     };
 
     try {
-      const initial = await runAttempt(sessionId);
-      const initialFailed =
-        !initial.proc.timedOut && ((initial.proc.exitCode ?? 0) !== 0 || Boolean(initial.parsed.errorMessage));
+      // Every run starts on the configured primary model, so quota recovery
+      // is automatic: the next run tries the primary first again.
+      const rotation = [model, ...availableFallbackModels];
+      const parsedErrorOf = (attempt: { proc: { stdout: string; stderr: string }; parsed: { errorMessage?: unknown } }) =>
+        typeof attempt.parsed.errorMessage === "string" ? attempt.parsed.errorMessage : "";
+      let current = await runAttempt(sessionId, rotation[0]);
+      let usedModel = rotation[0];
+      for (
+        let i = 1;
+        i < rotation.length &&
+        isFailedAttempt(current) &&
+        isProviderQuotaExhausted(current.proc.stdout, current.proc.stderr, parsedErrorOf(current));
+        i++
+      ) {
+        usedModel = rotation[i];
+        await onLog(
+          "stdout",
+          `[paperclip] Model "${rotation[i - 1]}" looks exhausted (${quotaEvidence(current.proc.stdout, current.proc.stderr, parsedErrorOf(current))}); retrying with fallback model "${usedModel}"${sessionId ? ` (continuing session "${sessionId}")` : ""}.\n`,
+        );
+        current = await runAttempt(sessionId, usedModel);
+      }
       if (
         sessionId &&
-        initialFailed &&
-        isOpenCodeUnknownSessionError(initial.proc.stdout, initial.rawStderr)
+        isFailedAttempt(current) &&
+        isOpenCodeUnknownSessionError(current.proc.stdout, current.rawStderr)
       ) {
         await onLog(
           "stdout",
           `[paperclip] OpenCode session "${sessionId}" is unavailable; retrying with a fresh session.\n`,
         );
-        const retry = await runAttempt(null);
-        return toResult(retry, true);
+        const retry = await runAttempt(null, usedModel);
+        return toResult(retry, true, usedModel);
       }
 
-      return toResult(initial);
+      return toResult(current, false, usedModel);
     } finally {
       await Promise.all([
         paperclipBridge?.stop(),

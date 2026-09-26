@@ -94,7 +94,11 @@ test("connection setup waits for provider details before enabling Continue", asy
 test("new OpenRouter agents use the visible binding and provider model catalog", async ({ page }) => {
   let tested: { aiConnection?: unknown; adapterConfig?: { model?: string } } | undefined;
   await page.route(`**/api/companies/${companyId}/adapters/opencode_local/models*`, async route => {
-    expect(new URL(route.request().url()).searchParams.get("provider")).toBe("openrouter");
+    // The wizard starts on the harness sign-in, whose discovery request carries
+    // no provider filter; once a managed OpenRouter binding is chosen the
+    // catalog request must be scoped to OpenRouter.
+    const provider = new URL(route.request().url()).searchParams.get("provider");
+    if (provider !== null) expect(provider).toBe("openrouter");
     await route.fulfill({ json: [{ id: "openrouter/anthropic/claude-sonnet-4.5", label: "Claude Sonnet 4.5" }] });
   });
   await page.route(`**/api/companies/${companyId}/adapters/opencode_local/test-environment`, async route => {
@@ -103,6 +107,8 @@ test("new OpenRouter agents use the visible binding and provider model catalog",
   });
   await page.goto(`/${prefix}/agents/new?name=OpenRouter+binding+regression&adapterType=opencode_local`);
   await expect(page.getByText("Existing authentication — not managed by Connections", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Use the environment’s OpenCode sign-in/ })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: /Responsible user’s connection/ }).click();
   await expect(page.getByRole("button", { name: /Responsible user’s connection/ })).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Select model (required)", exact: true }).click();
   await page.getByRole("button", { name: "anthropic/claude-sonnet-4.5", exact: true }).click();

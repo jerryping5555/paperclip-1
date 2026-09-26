@@ -84,6 +84,41 @@ function parseProviderConfig(
   return Object.keys(providers).length > 0 ? providers : null;
 }
 
+function parseMcpConfig(
+  raw: unknown,
+  resolveEnv: (name: string) => string | undefined,
+  notes: string[],
+): Record<string, unknown> | null {
+  if (typeof raw !== "string" || raw.trim().length === 0) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    notes.push("PAPERCLIP_OPENCODE_MCP contains invalid JSON; MCP servers ignored.");
+    return null;
+  }
+  if (!isPlainObject(parsed)) {
+    notes.push(
+      "PAPERCLIP_OPENCODE_MCP is set but is not a JSON object; MCP servers ignored.",
+    );
+    return null;
+  }
+  // Same entry rules as providers: only object entries are kept, and dropped
+  // entries are surfaced so a malformed server is diagnosable.
+  const servers: Record<string, unknown> = {};
+  const skipped: string[] = [];
+  for (const [key, value] of Object.entries(parsed)) {
+    if (isPlainObject(value)) servers[key] = expandEnvPlaceholders(value, resolveEnv);
+    else skipped.push(key);
+  }
+  if (skipped.length > 0) {
+    notes.push(
+      `PAPERCLIP_OPENCODE_MCP: skipped MCP server(s) with non-object values: ${skipped.join(", ")}.`,
+    );
+  }
+  return Object.keys(servers).length > 0 ? servers : null;
+}
+
 function parseConfiguredModelRef(raw: unknown): { provider: string; model: string } | null {
   if (typeof raw !== "string") return null;
   const trimmed = raw.trim();
@@ -166,6 +201,19 @@ export async function prepareOpenCodeRuntimeConfig(input: {
     resolveEnv,
     notes,
   );
+  // Agent-scoped MCP injection (the PAPERCLIP_OPENCODE_PROVIDERS analog for
+  // servers): the harness keeps project-level opencode.json disabled during
+  // runs, so per-repo/per-agent MCP enablement has no native path. This env
+  // var carries a JSON object in OpenCode's `mcp` shape — typically one server
+  // copied from the global config with `enabled: true` — merged over the
+  // copied global `mcp` block. Secrets stay out of the JSON via {env:VAR}
+  // placeholders, expanded server-side from the run env (e.g. secret_ref
+  // bindings on the agent's env) exactly like gateway provider keys.
+  const injectedMcp = parseMcpConfig(
+    input.env.PAPERCLIP_OPENCODE_MCP ?? process.env.PAPERCLIP_OPENCODE_MCP,
+    resolveEnv,
+    notes,
+  );
   const existingProvider = isPlainObject(existingConfig.provider) ? existingConfig.provider : {};
   let nextProvider = gatewayProviders
     ? { ...existingProvider, ...gatewayProviders }
@@ -208,6 +256,13 @@ export async function prepareOpenCodeRuntimeConfig(input: {
   };
   if (Object.keys(nextProvider).length > 0) {
     nextConfig.provider = nextProvider;
+  }
+  if (injectedMcp) {
+    const existingMcp = isPlainObject(existingConfig.mcp) ? existingConfig.mcp : {};
+    nextConfig.mcp = { ...existingMcp, ...injectedMcp };
+    notes.push(
+      `Injected ${Object.keys(injectedMcp).length} OpenCode MCP server(s) from PAPERCLIP_OPENCODE_MCP: ${Object.keys(injectedMcp).join(", ")}.`,
+    );
   }
 
   // Pin OpenCode's auxiliary "small" model (used for session-title generation and

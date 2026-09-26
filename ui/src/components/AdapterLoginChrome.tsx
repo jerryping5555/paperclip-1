@@ -49,7 +49,12 @@ export type AdapterLoginChrome = "panel" | "onboarding";
 export const CONNECT_SOURCE_NAMES: Record<string, string> = {
   claude_local: "Claude",
   codex_local: "OpenAI",
+  gemini_local: "Gemini",
   grok_local: "Grok",
+  kimi_local: "Kimi",
+  opencode_local: "OpenCode",
+  pi_local: "Pi",
+  cursor: "Cursor",
 };
 
 /** The provider name for a source, falling back to the type when unlisted. */
@@ -472,9 +477,14 @@ export function LocalProviderLoginInstructions({ adapterType, login }: {
   login?: { isolated?: boolean; command?: string; preparing: boolean; status?: "ready" | "sign_in_required" | "expired" | null; error: string | null; retry: () => void };
 }) {
   const [showCommand, setShowCommand] = useState(false);
-  const provider = adapterType === "claude_local" ? "Claude Code" : adapterType === "grok_local" ? "Grok CLI" : "Codex CLI";
+  const provider = adapterType === "claude_local" ? "Claude Code" : adapterType === "grok_local" ? "Grok CLI" : adapterType === "opencode_local" ? "OpenCode" : adapterType === "pi_local" ? "Pi" : "Codex CLI";
   const isolated = login?.isolated ?? (adapterType === "codex_local" || adapterType === "grok_local");
-  const command = isolated ? login?.command : "claude auth login";
+  // Multi-provider harnesses authenticate per provider with their own CLI
+  // command; there is no Paperclip-side session to poll for them, and Connect's
+  // environment test is what checks the sign-in.
+  const command = adapterType === "opencode_local"
+    ? "opencode auth login"
+    : isolated ? login?.command : adapterType === "pi_local" ? undefined : "claude auth login";
   if (login?.preparing) return <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />Checking local {provider} sign-in…</p>;
   const ready = login?.status === "ready";
   return <div className="min-w-0 max-w-full space-y-3 text-sm text-muted-foreground">

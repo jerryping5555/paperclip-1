@@ -324,3 +324,186 @@ describe("ensureRemoteOpenCodeModelConfiguredAndAvailable — probe is non-fatal
     ).rejects.toThrow("Configured OpenCode model is unavailable on the remote execution target");
   });
 });
+
+describe("OpenCode model fallback on quota exhaustion", () => {
+  let configHome: string;
+
+  beforeEach(async () => {
+    configHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-opencode-fallback-"));
+    vi.stubEnv("XDG_CONFIG_HOME", configHome);
+  });
+
+  afterEach(async () => {
+    vi.unstubAllEnvs();
+    await fs.rm(configHome, { recursive: true, force: true });
+  });
+
+  function successStdout(sessionId: string) {
+    return JSON.stringify({ type: "text", sessionID: sessionId, part: { text: "Done" } });
+  }
+
+  async function runWithFallbacks(options: {
+    model: string;
+    fallbackModels?: unknown;
+    attempts: Array<{ exitCode: number | null; stdout?: string; stderr?: string }>;
+    refreshProbe?: boolean;
+    preflightModels?: string;
+  }) {
+    const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-opencode-fallback-ws-"));
+    const commandPath = path.join(configHome, "fake-opencode");
+    if (options.refreshProbe) {
+      // The availability pre-flight shells out to the real command: answer
+      // `models` with a fixed list so unlisted fallbacks are dropped.
+      await fs.writeFile(
+        commandPath,
+        `#!/bin/sh\nif [ "$1" = "models" ]; then printf '%s\\n' ${options.preflightModels ?? ""}; exit 0; fi\nexit 0\n`,
+        { mode: 0o755 },
+      );
+    } else {
+      await fs.writeFile(commandPath, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+    }
+    runProcessMock.mockReset();
+    for (const attempt of options.attempts) {
+      runProcessMock.mockResolvedValueOnce(
+        probeResult({ exitCode: attempt.exitCode, stdout: attempt.stdout ?? "", stderr: attempt.stderr ?? "" }),
+      );
+    }
+    const metas: Array<Record<string, unknown>> = [];
+    const logs: string[] = [];
+    const result = await execute({
+      runId: "fallback-run",
+      agent: { id: "agent-1", companyId: "company-1", name: "OpenCode", adapterType: "opencode_local", adapterConfig: {} },
+      runtime: { sessionId: null, sessionParams: null, sessionDisplayId: null, taskKey: null },
+      config: {
+        command: commandPath,
+        cwd: workspace,
+        model: options.model,
+        ...(options.fallbackModels !== undefined ? { fallbackModels: options.fallbackModels } : {}),
+        ...(!options.refreshProbe ? { env: { OPENCODE_ALLOW_ALL_MODELS: "1" } } : {}),
+      },
+      context: {},
+      onLog: async (_stream, line) => { logs.push(String(line)); },
+      onMeta: async (meta) => { metas.push(meta as unknown as Record<string, unknown>); },
+    });
+    await fs.rm(workspace, { recursive: true, force: true });
+    const modelsUsed = metas.map((meta) => {
+      const args = (meta.commandArgs ?? []) as unknown[];
+      const idx = args.findIndex((arg) => arg === "--model");
+      return idx >= 0 ? String(args[idx + 1]) : null;
+    });
+    return { result, modelsUsed, logs, calls: runProcessMock.mock.calls.length };
+  }
+
+  it("rotates to the fallback model when the primary is quota-exhausted and attributes the run to it", async () => {
+    const { result, modelsUsed, logs, calls } = await runWithFallbacks({
+      model: "zai/GLM-5.1_F",
+      fallbackModels: ["opencode/muse-spark-1.3"],
+      attempts: [
+        { exitCode: 1, stderr: "Error: request failed with status 429: GLM quota exhausted, retry after 5 hours" },
+        { exitCode: 0, stdout: successStdout("fallback-session") },
+      ],
+    });
+    expect(calls).toBe(2);
+    expect(modelsUsed).toEqual(["zai/GLM-5.1_F", "opencode/muse-spark-1.3"]);
+    expect(result.exitCode).toBe(0);
+    expect(result.model).toBe("opencode/muse-spark-1.3");
+    expect(logs.some((line) => line.includes("muse-spark-1.3"))).toBe(true);
+  });
+
+  it("does not rotate on non-quota failures even with fallbacks configured", async () => {
+    const { result, modelsUsed, calls } = await runWithFallbacks({
+      model: "zai/GLM-5.1_F",
+      fallbackModels: ["opencode/muse-spark-1.3"],
+      attempts: [{ exitCode: 1, stderr: "Error: authentication failed: invalid API key" }],
+    });
+    expect(calls).toBe(1);
+    expect(modelsUsed).toEqual(["zai/GLM-5.1_F"]);
+    expect(result.exitCode).toBe(1);
+    expect(result.model).toBe("zai/GLM-5.1_F");
+  });
+
+  it("fails fast with a single attempt when no fallback is configured", async () => {
+    const { result, calls } = await runWithFallbacks({
+      model: "zai/GLM-5.1_F",
+      attempts: [{ exitCode: 1, stderr: "Error: 429 Too Many Requests" }],
+    });
+    expect(calls).toBe(1);
+    expect(result.exitCode).toBe(1);
+    expect(result.model).toBe("zai/GLM-5.1_F");
+  });
+
+  it("drops fallback entries that fail the availability pre-flight and ignores malformed entries", async () => {
+    const { result, modelsUsed, logs, calls } = await runWithFallbacks({
+      model: "zai/GLM-5.1_F",
+      fallbackModels: ["opencode/muse-spark-1.3", "zai/GLM-5.1_F", "not-a-model", 42, null],
+      attempts: [{ exitCode: 0, stdout: successStdout("primary-session") }],
+      refreshProbe: true,
+      preflightModels: "zai/GLM-5.1_F",
+    });
+    expect(calls).toBe(1);
+    expect(modelsUsed).toEqual(["zai/GLM-5.1_F"]);
+    expect(result.exitCode).toBe(0);
+    expect(logs.some((line) => line.includes("muse-spark-1.3") && line.includes("skipped"))).toBe(true);
+  });
+});
+
+describe("OpenCode quota-exhaustion classification", () => {
+  let configHome: string;
+
+  beforeEach(async () => {
+    configHome = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-opencode-quota-"));
+    vi.stubEnv("XDG_CONFIG_HOME", configHome);
+  });
+
+  afterEach(async () => {
+    vi.unstubAllEnvs();
+    await fs.rm(configHome, { recursive: true, force: true });
+  });
+
+  async function runOnce(stderr: string, stdout = "") {
+    const workspace = await fs.mkdtemp(path.join(os.tmpdir(), "paperclip-opencode-quota-ws-"));
+    const commandPath = path.join(configHome, "fake-opencode");
+    await fs.writeFile(commandPath, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+    runProcessMock.mockReset();
+    runProcessMock.mockResolvedValueOnce(probeResult({ exitCode: 1, stdout, stderr }));
+    runProcessMock.mockResolvedValueOnce(
+      probeResult({ exitCode: 0, stdout: JSON.stringify({ type: "text", sessionID: "s", part: { text: "ok" } }) }),
+    );
+    const result = await execute({
+      runId: "quota-run",
+      agent: { id: "agent-1", companyId: "company-1", name: "OpenCode", adapterType: "opencode_local", adapterConfig: {} },
+      runtime: { sessionId: null, sessionParams: null, sessionDisplayId: null, taskKey: null },
+      config: {
+        command: commandPath,
+        cwd: workspace,
+        model: "zai/GLM-5.1_F",
+        fallbackModels: ["opencode/muse-spark-1.3"],
+        env: { OPENCODE_ALLOW_ALL_MODELS: "1" },
+      },
+      context: {},
+      onLog: async () => {},
+      onMeta: async () => {},
+    });
+    await fs.rm(workspace, { recursive: true, force: true });
+    return { calls: runProcessMock.mock.calls.length, result };
+  }
+
+  it("rotates on a 402 insufficient-funds failure", async () => {
+    const { calls, result } = await runOnce(
+      "Error: Upstream request failed: Insufficient account funds (statusCode 402)",
+    );
+    // First attempt fails (mock queue: failure, then success), second succeeds.
+    expect(calls).toBe(2);
+    expect(result.exitCode).toBe(0);
+    expect(result.model).toBe("opencode/muse-spark-1.3");
+  });
+
+  it("rotates on a Chinese quota-window message", async () => {
+    const { calls, result } = await runOnce(
+      "已达到 5 小时的使用上限。您的限额将在 2026-09-26 16:26:02 重置。",
+    );
+    expect(calls).toBe(2);
+    expect(result.exitCode).toBe(0);
+    expect(result.model).toBe("opencode/muse-spark-1.3");
+  });
+});

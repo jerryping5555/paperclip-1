@@ -193,12 +193,24 @@ vi.mock("../adapters/metadata", () => ({ isVisualAdapterChoice: () => true }));
 vi.mock("../adapters/adapter-display-registry", () => ({
   getAdapterDisplay: (type: string) => ({
     type,
-    // Mirrors the real registry, where these two and only these two are
-    // `recommended`. A blanket `false` used to be harmless because every adapter
-    // then sat in the "Advanced settings" disclosure and was reachable anyway;
-    // with the step down to a tile row built from this flag, it made that row
-    // empty in every test and hid the surface under it.
-    recommended: type === "claude_local" || type === "codex_local",
+    // Mirrors the real registry: every harness adapter the wizard's connect
+    // step can drive is `recommended`, so the tile row offers the full set
+    // (Claude, OpenAI, Gemini, Grok, Kimi, OpenCode, Pi, Cursor). Hermes and
+    // the gateway/remote adapters stay non-recommended. A blanket `false` used
+    // to be harmless because every adapter then sat in the "Advanced settings"
+    // disclosure and was reachable anyway; with the step down to a tile row
+    // built from this flag, it made that row empty in every test and hid the
+    // surface under it.
+    recommended: [
+      "claude_local",
+      "codex_local",
+      "gemini_local",
+      "grok_local",
+      "kimi_local",
+      "opencode_local",
+      "pi_local",
+      "cursor",
+    ].includes(type),
     label: type,
     description: "",
     icon: () => null,
@@ -2132,13 +2144,14 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
       //
       // The tile row is `recommendedAdapters`; the snap's idea of "visible" is
       // recommended *plus* the advanced list. An adapter in the second but not
-      // the first — a saved `opencode_local`, say — therefore satisfies the
-      // snap, which leaves it alone, while the row it is supposed to be chosen
-      // in never shows it. Nothing is highlighted, the canvas is shut, and with
-      // the gate on `sourcePicked` the CTA was live: one press hires against an
-      // adapter the customer has not seen on this screen.
-      mockAdapterRegistry.list = [{ type: "claude_local" }, { type: "opencode_local" }];
-      const { root } = await openStep4({ adapterType: "opencode_local" });
+      // the first — a saved `hermes_local`, say, which the wizard deliberately
+      // does not offer as a tile — therefore satisfies the snap, which leaves
+      // it alone, while the row it is supposed to be chosen in never shows it.
+      // Nothing is highlighted, the canvas is shut, and with the gate on
+      // `sourcePicked` the CTA was live: one press hires against an adapter
+      // the customer has not seen on this screen.
+      mockAdapterRegistry.list = [{ type: "claude_local" }, { type: "hermes_local" }];
+      const { root } = await openStep4({ adapterType: "hermes_local" });
 
       const tiles = [...document.body.querySelectorAll("button[aria-checked]")];
       expect(

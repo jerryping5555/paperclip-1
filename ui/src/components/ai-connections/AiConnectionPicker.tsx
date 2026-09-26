@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AppLogo } from "@/pages/apps/AppLogo";
 import { ConnectionChoiceList } from "@/features/connections/ConnectionChoiceList";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,17 @@ export interface AiConnectionPickerProps {
   loading?: boolean;
   error?: string;
   readOnly?: boolean;
+  /**
+   * Harness-authenticated adapters (OpenCode, Pi) run with the sign-ins their
+   * own CLI already holds on the environment host, so a managed connection is
+   * an option rather than a requirement. When set, the list offers a "none"
+   * choice that clears the binding instead of selecting an account.
+   */
+  allowNone?: boolean;
+  noneName?: string;
+  noneDescription?: ReactNode;
   onChange: (binding: AiConnectionBinding) => void;
+  onClear?: () => void;
   onConnect: () => void;
   onRetry?: () => void;
 }
@@ -35,10 +46,15 @@ export function AiConnectionPicker({
   value,
   currentUserId,
   agentId,
+  agentName,
   loading,
   error,
   readOnly,
+  allowNone,
+  noneName,
+  noneDescription,
   onChange,
+  onClear,
   onConnect,
   onRetry,
 }: AiConnectionPickerProps) {
@@ -105,8 +121,27 @@ export function AiConnectionPicker({
         <>
           <ConnectionChoiceList
             disabled={readOnly}
-            selectedId={value?.mode === "responsible_user" ? "responsible_user" : value?.connectionId}
+            selectedId={
+              value
+                ? value.mode === "responsible_user"
+                  ? "responsible_user"
+                  : value.connectionId
+                : allowNone
+                  ? "none"
+                  : undefined
+            }
             choices={[
+              ...(allowNone
+                ? [
+                    {
+                      id: "none",
+                      name: noneName ?? "No managed connection",
+                      description:
+                        noneDescription ??
+                        "Use the harness sign-in and model routing already configured on the environment host.",
+                    },
+                  ]
+                : []),
               { id: "responsible_user", name: "Responsible user’s connection", description: <>
                 <span className="block">For you: {personalDefault?.name ?? "Not connected"}</span>
                 <span className="block">Other users’ tasks use their own {AI_PROVIDERS[requirement.provider].name} connection.</span>
@@ -118,6 +153,7 @@ export function AiConnectionPicker({
               })),
             ]}
             onSelect={(id) => {
+              if (id === "none") { onClear?.(); return; }
               if (id === "responsible_user") onChange({provider: requirement.provider, method: personalDefault?.method ?? requirement.method ?? (requirement.provider === "openrouter" ? "api_key" : "subscription"), mode: "responsible_user"});
               else { const connection = compatible.find((item) => item.id === id)!; select("shared", connection); }
             }}

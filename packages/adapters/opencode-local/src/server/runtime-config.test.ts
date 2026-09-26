@@ -320,4 +320,83 @@ describe("prepareOpenCodeRuntimeConfig", () => {
     expect(prepared.notes).toEqual([]);
     await prepared.cleanup();
   });
+
+  it("merges MCP servers from PAPERCLIP_OPENCODE_MCP over the copied global mcp block", async () => {
+    const configHome = await makeConfigHome({
+      mcp: {
+        woocommerce: { type: "local", enabled: false },
+        unrelated: { type: "local", enabled: false },
+      },
+    });
+    const servers = {
+      woocommerce: {
+        type: "local",
+        command: ["/usr/bin/node", "/svc/woocommerce-mcp/build/index.js"],
+        enabled: true,
+        environment: {
+          WORDPRESS_SITE_URL: "https://example.com",
+          WOOCOMMERCE_CONSUMER_KEY: "{env:WOO_KEY}",
+        },
+      },
+    };
+    const prepared = await prepareOpenCodeRuntimeConfig({
+      env: {
+        XDG_CONFIG_HOME: configHome,
+        PAPERCLIP_OPENCODE_MCP: JSON.stringify(servers),
+        WOO_KEY: "ck_REAL",
+      },
+      config: {},
+    });
+    cleanupPaths.add(prepared.env.XDG_CONFIG_HOME);
+    const runtimeConfig = JSON.parse(
+      await fs.readFile(path.join(prepared.env.XDG_CONFIG_HOME, "opencode", "opencode.json"), "utf8"),
+    ) as {
+      mcp: Record<string, { enabled?: boolean; environment?: Record<string, string> }>;
+    };
+    expect(runtimeConfig.mcp.woocommerce.enabled).toBe(true);
+    // {env:VAR} placeholders are baked server-side from the run env.
+    expect(runtimeConfig.mcp.woocommerce.environment?.WOOCOMMERCE_CONSUMER_KEY).toBe("ck_REAL");
+    // Servers not named in the injection keep their copied definition.
+    expect(runtimeConfig.mcp.unrelated).toEqual({ type: "local", enabled: false });
+    expect(prepared.notes.some((note) => note.includes("woocommerce"))).toBe(true);
+    await prepared.cleanup();
+  });
+
+  it("ignores malformed PAPERCLIP_OPENCODE_MCP without touching the copied mcp block", async () => {
+    const configHome = await makeConfigHome({
+      mcp: { woocommerce: { type: "local", enabled: false } },
+    });
+    const prepared = await prepareOpenCodeRuntimeConfig({
+      env: { XDG_CONFIG_HOME: configHome, PAPERCLIP_OPENCODE_MCP: "not json" },
+      config: {},
+    });
+    cleanupPaths.add(prepared.env.XDG_CONFIG_HOME);
+    const runtimeConfig = JSON.parse(
+      await fs.readFile(path.join(prepared.env.XDG_CONFIG_HOME, "opencode", "opencode.json"), "utf8"),
+    ) as { mcp?: Record<string, unknown> };
+    expect(runtimeConfig.mcp).toEqual({ woocommerce: { type: "local", enabled: false } });
+    expect(prepared.notes).toContain(
+      "PAPERCLIP_OPENCODE_MCP contains invalid JSON; MCP servers ignored.",
+    );
+    await prepared.cleanup();
+  });
+
+  it("leaves an unresolvable {env:VAR} placeholder in injected MCP servers intact", async () => {
+    const configHome = await makeConfigHome();
+    const prepared = await prepareOpenCodeRuntimeConfig({
+      env: {
+        XDG_CONFIG_HOME: configHome,
+        PAPERCLIP_OPENCODE_MCP: JSON.stringify({
+          woo: { type: "local", enabled: true, environment: { KEY: "{env:DEFINITELY_UNSET_VAR_XYZ}" } },
+        }),
+      },
+      config: {},
+    });
+    cleanupPaths.add(prepared.env.XDG_CONFIG_HOME);
+    const runtimeConfig = JSON.parse(
+      await fs.readFile(path.join(prepared.env.XDG_CONFIG_HOME, "opencode", "opencode.json"), "utf8"),
+    ) as { mcp?: { woo?: { environment?: { KEY?: string } } } };
+    expect(runtimeConfig.mcp?.woo?.environment?.KEY).toBe("{env:DEFINITELY_UNSET_VAR_XYZ}");
+    await prepared.cleanup();
+  });
 });

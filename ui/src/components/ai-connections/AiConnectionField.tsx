@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   aiConnectionBindingSchema,
@@ -41,9 +41,13 @@ export function AiConnectionField({
   model,
   value,
   onChange,
+  onClear,
   environmentId,
   legacy = false,
   readOnly = false,
+  allowNone = false,
+  noneName,
+  noneDescription,
 }: {
   companyId: string;
   agentId?: string;
@@ -52,9 +56,13 @@ export function AiConnectionField({
   model?: string;
   value?: AiConnectionBinding;
   onChange: (binding: AiConnectionBinding) => void;
+  onClear?: () => void;
   environmentId?: string;
   legacy?: boolean;
   readOnly?: boolean;
+  allowNone?: boolean;
+  noneName?: string;
+  noneDescription?: ReactNode;
 }) {
   const provider = aiProviderForAdapter(adapterType);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -101,9 +109,13 @@ export function AiConnectionField({
         readOnly={readOnly}
         loading={accounts.isPending}
         error={accounts.error?.message}
+        allowNone={allowNone}
+        noneName={noneName}
+        noneDescription={noneDescription}
         onChange={(binding) =>
           changeBinding(aiConnectionBindingSchema.parse(binding))
         }
+        onClear={onClear}
         onConnect={() => { returnFocus.current = document.activeElement as HTMLElement; setConnecting(true); }}
         onRetry={() => void accounts.refetch()}
       />
