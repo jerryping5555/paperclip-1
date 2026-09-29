@@ -2049,8 +2049,17 @@ function StreamlinedInbox() {
           tone: "success",
         });
       } else {
+        const reasonFor = (result: BulkDeleteIssueItemResult) => {
+          if (result.error?.code === "issue_has_children") return "has sub-tasks";
+          if (result.error?.code === "issue_referenced") return "is referenced by records that must be kept";
+          return result.error?.message ?? "unknown error";
+        };
+        const failedSummary = failedResults
+          .slice(0, 5)
+          .map((result) => `"${issueById.get(result.issueId)?.title ?? result.issueId.slice(0, 8)}" ${reasonFor(result)}`)
+          .join("; ");
         setActionError(
-          `${failedResults.length} of ${results.length} items could not be deleted: ${failedResults[0].error?.message ?? "unknown error"}`,
+          `${failedResults.length} of ${results.length} items could not be deleted: ${failedSummary}${failedResults.length > 5 ? "; …" : ""}`,
         );
       }
     },

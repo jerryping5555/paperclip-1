@@ -1098,6 +1098,13 @@ const support = await getEmbeddedPostgresTestSupport();
     const second = await issueService(db).create(companyId, {
       title: "Bulk delete two",
     });
+    const parent = await issueService(db).create(companyId, {
+      title: "Bulk delete parent",
+    });
+    const child = await issueService(db).create(companyId, {
+      title: "Bulk delete child",
+      parentId: parent.id,
+    });
     const missingId = randomUUID();
 
     expect(
@@ -1119,24 +1126,44 @@ const support = await getEmbeddedPostgresTestSupport();
       appFor({ type: "board", userId: owner, companyIds: [companyId] }),
     )
       .post(`/api/companies/${companyId}/issues/bulk-delete`)
-      .send({ issueIds: [first.id, second.id, missingId] });
+      .send({ issueIds: [first.id, second.id, parent.id, missingId] });
     expect(response.status).toBe(200);
-    expect(response.body.results).toHaveLength(3);
+    expect(response.body.results).toHaveLength(4);
     expect(
       response.body.results.filter((result: { ok: boolean }) => result.ok),
     ).toHaveLength(2);
+    const parentResult = response.body.results.find(
+      (result: { issueId: string }) => result.issueId === parent.id,
+    );
+    expect(parentResult.ok).toBe(false);
+    expect(parentResult.error.status).toBe(409);
+    expect(parentResult.error.code).toBe("issue_has_children");
     const missingResult = response.body.results.find(
       (result: { issueId: string }) => result.issueId === missingId,
     );
     expect(missingResult.ok).toBe(false);
     expect(missingResult.error.status).toBe(404);
 
+    const childResponse = await request(
+      appFor({ type: "board", userId: owner, companyIds: [companyId] }),
+    )
+      .post(`/api/companies/${companyId}/issues/bulk-delete`)
+      .send({ issueIds: [child.id, parent.id] });
+    expect(
+      childResponse.body.results.filter((result: { ok: boolean }) => result.ok),
+    ).toHaveLength(2);
     const remaining = await db
       .select({ id: issues.id })
       .from(issues)
       .where(eq(issues.companyId, companyId));
     expect(
-      remaining.some((row) => row.id === first.id || row.id === second.id),
+      remaining.some(
+        (row) =>
+          row.id === first.id
+          || row.id === second.id
+          || row.id === parent.id
+          || row.id === child.id,
+      ),
     ).toBe(false);
   });
   },

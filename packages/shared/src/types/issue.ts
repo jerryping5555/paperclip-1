@@ -980,6 +980,7 @@ export interface BulkDeleteIssueItemResult {
   error: {
     status: number;
     message: string;
+    code?: string;
   } | null;
 }
 

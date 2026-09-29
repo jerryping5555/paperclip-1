@@ -15028,8 +15028,50 @@ export function issueRoutes(
           if (!issue || issue.companyId !== companyId) {
             throw notFound("Issue not found");
           }
+          const childRows = await db
+            .select({ id: issueRows.id })
+            .from(issueRows)
+            .where(
+              and(
+                eq(issueRows.companyId, companyId),
+                eq(issueRows.parentId, issueId),
+              ),
+            );
+          if (childRows.length > 0) {
+            results.push({
+              issueId,
+              ok: false,
+              error: {
+                status: 409,
+                message: `Task has ${childRows.length} sub-task${
+                  childRows.length === 1 ? "" : "s"
+                }. Delete or move ${childRows.length === 1 ? "it" : "them"} first.`,
+                code: "issue_has_children",
+              },
+            });
+            continue;
+          }
           const attachments = await svc.listAttachments(issueId);
-          const removed = await svc.remove(issueId);
+          let removed: Awaited<ReturnType<typeof svc.remove>> = null;
+          try {
+            removed = await svc.remove(issueId);
+          } catch (err) {
+            const httpError = err as { status?: number; message?: string };
+            if (httpError.status === 409) {
+              results.push({
+                issueId,
+                ok: false,
+                error: {
+                  status: 409,
+                  message:
+                    "Task is referenced by records that must be kept (for example decision history). It cannot be deleted.",
+                  code: "issue_referenced",
+                },
+              });
+              continue;
+            }
+            throw err;
+          }
           if (!removed) throw notFound("Issue not found");
           for (const attachment of attachments) {
             try {
