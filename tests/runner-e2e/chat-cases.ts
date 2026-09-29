@@ -66,3 +66,10 @@ export const chatQualificationTasks = buildChatTasks([
   ["worker-crash-retry", "Recover from worker process loss through visible Retry", 2],
   ["grounded-answer-quality", "Ground status, correct stale claims, and acknowledge uncertainty", 2],
 ]);
+
+export const chatCompletionTasks = buildChatTasks([
+  ["handoff-completion-idle", "Report a delegated result after the chat goes idle", 4],
+  ["handoff-completion-busy", "Queue a delegated result behind an active chat reply", 5],
+  ["handoff-completion-multiple", "Report multiple delegated results as they finish", 7],
+  ["handoff-completion-restart", "Recover pending completion delivery across a server restart", 5],
+]).map(task => ({ ...task, minimumExpectedRunCount: 2 }));
