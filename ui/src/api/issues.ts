@@ -3,6 +3,8 @@ import type {
   AcceptedPlanDecompositionSummary,
   AskUserQuestionsAnswer,
   Approval,
+  BulkDeleteIssuesResponse,
+  ClearIssueCommentsResponse,
   CompactIssue,
   CreateIssueTreeHold,
   DocumentRevision,
@@ -342,6 +344,11 @@ export const issuesApi = {
       {},
     ),
   remove: (id: string) => api.delete<Issue>(`/issues/${id}`),
+  bulkDelete: (companyId: string, issueIds: string[]) =>
+    api.post<BulkDeleteIssuesResponse>(
+      `/companies/${companyId}/issues/bulk-delete`,
+      { issueIds },
+    ),
   checkout: (id: string, agentId: string) =>
     api.post<Issue>(`/issues/${id}/checkout`, {
       agentId,
@@ -530,6 +537,8 @@ export const issuesApi = {
     api.delete<IssueComment>(`/issues/${id}/comments/${commentId}?mode=cancel`),
   deleteComment: (id: string, commentId: string) =>
     api.delete<IssueComment>(`/issues/${id}/comments/${commentId}`),
+  clearComments: (id: string) =>
+    api.delete<ClearIssueCommentsResponse>(`/issues/${id}/comments`),
   listDocuments: (id: string, options?: { includeSystem?: boolean }) =>
     api.get<IssueDocument[]>(
       `/issues/${id}/documents${options?.includeSystem ? "?includeSystem=true" : ""}`,

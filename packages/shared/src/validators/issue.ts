@@ -1031,6 +1031,12 @@ export const addIssueCommentSchema = z.object({
 
 export type AddIssueComment = z.infer<typeof addIssueCommentSchema>;
 
+export const bulkDeleteIssuesSchema = z.object({
+  issueIds: z.array(z.string().uuid()).min(1).max(100),
+});
+
+export type BulkDeleteIssues = z.infer<typeof bulkDeleteIssuesSchema>;
+
 export const issueThreadInteractionStatusSchema = z.enum(
   ISSUE_THREAD_INTERACTION_STATUSES,
 );

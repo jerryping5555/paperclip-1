@@ -71,6 +71,7 @@ const mockIssuesApi = vi.hoisted(() => ({
   unarchiveFromInbox: vi.fn(),
   addComment: vi.fn(),
   cancelComment: vi.fn(),
+  clearComments: vi.fn(),
   upsertFeedbackVote: vi.fn(),
   uploadAttachment: vi.fn(),
   deleteAttachment: vi.fn(),
@@ -1431,6 +1432,90 @@ describe("IssueDetail", () => {
     await flushReact();
     expect(mockNavigate).not.toHaveBeenCalled();
     expect(mockIssuesApi.markRead).toHaveBeenCalledWith(canonical.id);
+  });
+
+  it("offers and confirms clearing chat history for the conversation owner", async () => {
+    mockAuthApi.getSession.mockResolvedValue({
+      session: { userId: "user-1" },
+      user: { id: "user-1" },
+    });
+    const agent = createAgent();
+    const canonical = createIssue({ conversationAgentId: agent.id, conversationUserId: "user-1", conversationState: "waiting", status: "in_review" });
+    mockIssuesApi.get.mockResolvedValue(canonical);
+    mockIssuesApi.listComments.mockResolvedValue([]);
+    mockIssuesApi.clearComments.mockResolvedValue({ clearedCommentCount: 2, conversationSessionGeneration: 1 });
+    await act(async () => {
+      root.render(<QueryClientProvider client={queryClient}><TaskDetailSurface conversation={{ agent, issue: canonical, ensureIssue: async () => canonical }} /></QueryClientProvider>);
+    });
+    await flushReact();
+    await flushReact();
+
+    const conversationCrumbs = mockSetBreadcrumbs.mock.calls
+      .map((call) => call[0] as Array<{ trailing?: ReactNode }>)
+      .filter((crumbs) => crumbs?.[0]?.trailing)
+      .at(-1);
+    expect(conversationCrumbs).toBeDefined();
+    const actionsHost = document.createElement("div");
+    document.body.appendChild(actionsHost);
+    const actionsRoot = createRoot(actionsHost);
+    await act(async () => {
+      actionsRoot.render(<>{conversationCrumbs![0]!.trailing}</>);
+    });
+    const clearButton = actionsHost.querySelector<HTMLButtonElement>('button[aria-label="Clear chat history"]');
+    expect(clearButton).not.toBeNull();
+    await act(async () => {
+      clearButton!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await waitForAssertion(() => {
+      expect(container.textContent).toContain("Clear chat history?");
+    });
+    const confirmButton = [...container.querySelectorAll<HTMLButtonElement>("button")]
+      .find((button) => button.textContent === "Clear history");
+    expect(confirmButton).toBeDefined();
+    await act(async () => {
+      confirmButton!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await waitForAssertion(() => {
+      expect(mockIssuesApi.clearComments).toHaveBeenCalledWith(canonical.id);
+    });
+    await act(async () => {
+      actionsRoot.unmount();
+    });
+    actionsHost.remove();
+  });
+
+  it("hides clear chat history from non-owners", async () => {
+    mockAuthApi.getSession.mockResolvedValue({
+      session: { userId: "user-1" },
+      user: { id: "user-1" },
+    });
+    const agent = createAgent();
+    const canonical = createIssue({ conversationAgentId: agent.id, conversationUserId: "user-2", conversationState: "waiting", status: "in_review" });
+    mockIssuesApi.get.mockResolvedValue(canonical);
+    mockIssuesApi.listComments.mockResolvedValue([]);
+    await act(async () => {
+      root.render(<QueryClientProvider client={queryClient}><TaskDetailSurface conversation={{ agent, issue: canonical, ensureIssue: async () => canonical }} /></QueryClientProvider>);
+    });
+    await flushReact();
+    await flushReact();
+
+    const conversationCrumbs = mockSetBreadcrumbs.mock.calls
+      .map((call) => call[0] as Array<{ trailing?: ReactNode }>)
+      .filter((crumbs) => crumbs?.[0]?.trailing)
+      .at(-1);
+    expect(conversationCrumbs).toBeDefined();
+    const actionsHost = document.createElement("div");
+    document.body.appendChild(actionsHost);
+    const actionsRoot = createRoot(actionsHost);
+    await act(async () => {
+      actionsRoot.render(<>{conversationCrumbs![0]!.trailing}</>);
+    });
+    expect(actionsHost.querySelector('button[aria-label="Clear chat history"]')).toBeNull();
+    expect(actionsHost.querySelector(`button[aria-label="Configure ${agent.name}"]`)).not.toBeNull();
+    await act(async () => {
+      actionsRoot.unmount();
+    });
+    actionsHost.remove();
   });
 
   it.each(["message", "attachment"])("creates an unused conversation only for the first %s and updates its canonical cache", async (kind) => {

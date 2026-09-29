@@ -32,6 +32,7 @@ import type { Db } from "@paperclipai/db";
 import type { ChatChannelService } from "../services/chat-channels.js";
 import {
   activityLog,
+  agentTaskSessions,
   agentWakeupRequests,
   agents,
   approvals,
@@ -59,6 +60,7 @@ import {
 } from "@paperclipai/db";
 import {
   addIssueCommentSchema,
+  bulkDeleteIssuesSchema,
   acceptIssueThreadInteractionSchema,
   attachmentArtifactWorkProductMetadataSchema,
   cancelIssueThreadInteractionSchema,
@@ -134,6 +136,7 @@ import {
   type SourceTrustMetadata,
   type SuggestTasksInteraction,
   type SuccessfulRunHandoffState,
+  type BulkDeleteIssueItemResult,
   type WorkspaceRuntimeService,
   issueWriteDenialCodeForResponsibleUserDenial,
   issueWriteDenialResponse,
@@ -15009,6 +15012,70 @@ export function issueRoutes(
   });
 
   router.post(
+    "/companies/:companyId/issues/bulk-delete",
+    validate(bulkDeleteIssuesSchema),
+    async (req, res) => {
+      const companyId = req.params.companyId as string;
+      assertCompanyAccess(req, companyId);
+      if (req.actor.type !== "board" || !req.actor.userId) {
+        throw forbidden("Board user access is required to bulk delete issues");
+      }
+      const actor = getActorInfo(req);
+      const results: BulkDeleteIssueItemResult[] = [];
+      for (const issueId of req.body.issueIds) {
+        try {
+          const issue = await svc.getById(issueId);
+          if (!issue || issue.companyId !== companyId) {
+            throw notFound("Issue not found");
+          }
+          const attachments = await svc.listAttachments(issueId);
+          const removed = await svc.remove(issueId);
+          if (!removed) throw notFound("Issue not found");
+          for (const attachment of attachments) {
+            try {
+              await storage.deleteObject(attachment.companyId, attachment.objectKey);
+            } catch (err) {
+              logger.warn(
+                { err, issueId, attachmentId: attachment.id },
+                "failed to delete attachment object during issue delete",
+              );
+            }
+          }
+          await logActivity(db, {
+            companyId,
+            actorType: actor.actorType,
+            actorId: actor.actorId,
+            agentId: actor.agentId,
+            runId: actor.runId,
+            agentApiKeyId: actor.agentApiKeyId,
+            action: "issue.deleted",
+            entityType: "issue",
+            entityId: removed.id,
+            details: {
+              source: "bulk_delete",
+              identifier: removed.identifier,
+              issueTitle: removed.title,
+            },
+          });
+          await queueTaskWatchdogEvaluation(issue, actor.runId);
+          results.push({ issueId, ok: true, error: null });
+        } catch (error) {
+          const httpError = error as { status?: number; message?: string };
+          results.push({
+            issueId,
+            ok: false,
+            error: {
+              status: httpError.status ?? 500,
+              message: httpError.message ?? "Unknown error",
+            },
+          });
+        }
+      }
+      res.json({ results });
+    },
+  );
+
+  router.post(
     "/issues/:id/checkout",
     validate(checkoutIssueSchema),
     async (req, res) => {
@@ -17093,6 +17160,172 @@ export function issueRoutes(
     });
 
     res.json(deleted);
+  });
+
+  router.delete("/issues/:id/comments", async (req, res) => {
+    const id = req.params.id as string;
+    const issue = await getAccessibleResource(
+      req,
+      res,
+      svc.getById(id),
+      "Issue not found",
+    );
+    if (!issue) return;
+    if (!issue.conversationAgentId) {
+      res.status(403).json({
+        error: "Only agent chat conversations support clearing history",
+      });
+      return;
+    }
+    if (!(await instanceSettings.getExperimental()).enableAgentChat) {
+      throw notFound("Agent Chat is disabled");
+    }
+    if (req.actor.type !== "board" || !req.actor.userId) {
+      throw forbidden("Board user access required");
+    }
+    if (req.actor.userId !== issue.conversationUserId) {
+      throw forbidden("Only the conversation owner can clear this chat");
+    }
+
+    const actor = getActorInfo(req);
+    const publications: ActivityPublication[] = [];
+    const cleared = await db.transaction(async (tx) => {
+      await tx
+        .select({ id: issueRows.id })
+        .from(issueRows)
+        .where(
+          and(
+            eq(issueRows.id, issue.id),
+            eq(issueRows.companyId, issue.companyId),
+          ),
+        )
+        .for("update");
+      const now = new Date();
+      const tombstoned = await tx
+        .update(issueComments)
+        .set({
+          body: "",
+          presentation: null,
+          metadata: null,
+          deletedAt: now,
+          deletedByType: actor.actorType,
+          deletedByAgentId: null,
+          deletedByUserId: actor.actorType === "user" ? actor.actorId : null,
+          deletedByRunId: null,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(issueComments.issueId, issue.id),
+            isNull(issueComments.deletedAt),
+          ),
+        )
+        .returning();
+      const generation =
+        (issue.conversationSessionGeneration ?? 0) + 1;
+      await tx
+        .update(issueRows)
+        .set({
+          conversationSessionGeneration: generation,
+          conversationBoundaryCommentId: null,
+          conversationState: "waiting",
+          status: "in_review",
+          statusVersion: sql`${issueRows.statusVersion} + 1`,
+          completedAt: null,
+          cancelledAt: null,
+          updatedAt: now,
+        })
+        .where(eq(issueRows.id, issue.id));
+      const expiredQuestions = await tx
+        .update(issueThreadInteractions)
+        .set({
+          status: "expired",
+          resolvedAt: now,
+          updatedAt: now,
+          resolvedByUserId: req.actor.userId,
+          result: {
+            version: 1,
+            outcome: "withdrawn",
+            reason: "Chat history cleared",
+            answers: [],
+            summaryMarkdown: null,
+          },
+        })
+        .where(
+          and(
+            eq(issueThreadInteractions.companyId, issue.companyId),
+            eq(issueThreadInteractions.issueId, issue.id),
+            eq(issueThreadInteractions.status, "pending"),
+            eq(issueThreadInteractions.kind, "ask_user_questions"),
+          ),
+        )
+        .returning({ id: issueThreadInteractions.id });
+      await tx
+        .delete(agentTaskSessions)
+        .where(
+          and(
+            eq(agentTaskSessions.companyId, issue.companyId),
+            eq(agentTaskSessions.agentId, issue.conversationAgentId!),
+            eq(agentTaskSessions.taskKey, issue.id),
+          ),
+        );
+      await logActivity(
+        tx as unknown as Db,
+        {
+          companyId: issue.companyId,
+          actorType: actor.actorType,
+          actorId: actor.actorId,
+          action: "issue.conversation_cleared",
+          entityType: "issue",
+          entityId: issue.id,
+          details: {
+            clearedCommentCount: tombstoned.length,
+            generation,
+            identifier: issue.identifier,
+            issueTitle: issue.title,
+            expiredInteractionIds: expiredQuestions.map((row) => row.id),
+          },
+        },
+        publications,
+      );
+      return { tombstoned, generation };
+    });
+    for (const publication of publications) publishActivity(publication);
+    for (const comment of cleared.tombstoned) {
+      await issueReferencesSvc.syncComment(comment.id);
+      await externalObjectsSvc.syncCommentSafely(comment.id);
+      const annotationCleanup =
+        await documentAnnotationsSvc.cleanupForIssueCommentDeletion(
+          issue.id,
+          comment.id,
+          {
+            actorType: actor.actorType,
+            actorId: actor.actorId,
+            agentId: actor.agentId,
+            userId: actor.actorType === "user" ? actor.actorId : null,
+            runId: actor.runId,
+          },
+        );
+      await Promise.all(
+        annotationCleanup.deletedCommentIds.map((annotationCommentId) =>
+          Promise.all([
+            issueReferencesSvc.deleteCommentSource(annotationCommentId),
+            externalObjectsSvc.syncCommentSafely(annotationCommentId),
+          ]),
+        ),
+      );
+      await decisionTrainingSvc.scrubDeletedComments({
+        companyId: issue.companyId,
+        issueId: issue.id,
+        commentIds: [comment.id, ...annotationCleanup.deletedCommentIds],
+        deletedAt: comment.deletedAt ?? new Date(),
+      });
+    }
+
+    res.json({
+      clearedCommentCount: cleared.tombstoned.length,
+      conversationSessionGeneration: cleared.generation,
+    });
   });
 
   router.get("/issues/:id/feedback-votes", async (req, res) => {

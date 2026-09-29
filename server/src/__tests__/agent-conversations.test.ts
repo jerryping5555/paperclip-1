@@ -941,6 +941,204 @@ const support = await getEmbeddedPostgresTestSupport();
         }),
       ).toBeNull();
     });
+  it("clears conversation history for the owner and resets the session", async () => {
+    const owner = randomUUID();
+    const colleague = randomUUID();
+    for (const userId of [owner, colleague]) {
+      await db
+        .insert(companyMemberships)
+        .values({
+          companyId,
+          principalType: "user",
+          principalId: userId,
+          status: "active",
+          membershipRole: "operator",
+        });
+      await ensureHumanRoleDefaultGrants(db, {
+        companyId,
+        principalId: userId,
+        membershipRole: "operator",
+        grantedByUserId: null,
+      });
+    }
+    const appFor = (userId: string) => {
+      const app = express();
+      app.use(express.json());
+      app.use((req, _res, next) => {
+        req.actor = {
+          type: "board",
+          source: "session",
+          userId,
+          companyIds: [companyId],
+        };
+        next();
+      });
+      app.use("/api", issueRoutes(db, { wakeup: async () => null } as never));
+      app.use(errorHandler);
+      return app;
+    };
+    const chat = await create(owner);
+    await issueService(db).addComment(
+      chat.id,
+      "Hello",
+      { userId: owner },
+      { authorType: "user", clientRequestId: randomUUID() },
+    );
+    await issueService(db).addComment(
+      chat.id,
+      "Hi! How can I help?",
+      { agentId },
+      { authorType: "agent" },
+    );
+    await db.insert(issueThreadInteractions).values({
+      companyId,
+      issueId: chat.id,
+      kind: "ask_user_questions",
+      status: "pending",
+      continuationPolicy: "wake_assignee_on_accept",
+      payload: { version: 1, questions: [] },
+    });
+    await db.insert(agentTaskSessions).values({
+      companyId,
+      agentId,
+      adapterType: "process",
+      taskKey: chat.id,
+    });
+    const commentsBefore = await db
+      .select()
+      .from(issueComments)
+      .where(eq(issueComments.issueId, chat.id));
+    expect(commentsBefore).toHaveLength(2);
+
+    expect(
+      (
+        await request(appFor(colleague))
+          .delete(`/api/issues/${chat.id}/comments`)
+      ).status,
+    ).toBe(403);
+    const clearedResponse = await request(appFor(owner)).delete(
+      `/api/issues/${chat.id}/comments`,
+    );
+    expect(clearedResponse.status).toBe(200);
+    expect(clearedResponse.body.clearedCommentCount).toBe(2);
+    expect(clearedResponse.body.conversationSessionGeneration).toBe(1);
+    const repeatResponse = await request(appFor(owner)).delete(
+      `/api/issues/${chat.id}/comments`,
+    );
+    expect(repeatResponse.status).toBe(200);
+    expect(repeatResponse.body.clearedCommentCount).toBe(0);
+    expect(repeatResponse.body.conversationSessionGeneration).toBe(2);
+
+    const commentsAfter = await db
+      .select()
+      .from(issueComments)
+      .where(eq(issueComments.issueId, chat.id));
+    expect(commentsAfter).toHaveLength(2);
+    expect(commentsAfter.every((row) => row.deletedAt !== null)).toBe(true);
+    expect(commentsAfter.every((row) => row.body === "")).toBe(true);
+
+    const [chatAfter] = await db
+      .select()
+      .from(issues)
+      .where(eq(issues.id, chat.id));
+    expect(chatAfter.conversationSessionGeneration).toBe(2);
+    expect(chatAfter.conversationBoundaryCommentId).toBeNull();
+    expect(chatAfter.conversationState).toBe("waiting");
+    expect(chatAfter.status).toBe("in_review");
+
+    const [question] = await db
+      .select()
+      .from(issueThreadInteractions)
+      .where(eq(issueThreadInteractions.issueId, chat.id));
+    expect(question.status).toBe("expired");
+
+    const sessions = await db
+      .select()
+      .from(agentTaskSessions)
+      .where(eq(agentTaskSessions.taskKey, chat.id));
+    expect(sessions).toHaveLength(0);
+
+    expect(
+      await conversationReplay(db, companyId, chat.id, null),
+    ).toBe("");
+  });
+  it("bulk-deletes issues for board actors and reports per-item failures", async () => {
+    const owner = randomUUID();
+    await db
+      .insert(companyMemberships)
+      .values({
+        companyId,
+        principalType: "user",
+        principalId: owner,
+        status: "active",
+        membershipRole: "operator",
+      });
+    await ensureHumanRoleDefaultGrants(db, {
+      companyId,
+      principalId: owner,
+      membershipRole: "operator",
+      grantedByUserId: null,
+    });
+    const appFor = (
+      actor: { type: string; userId?: string; agentId?: string; companyIds: string[] },
+    ) => {
+      const app = express();
+      app.use(express.json());
+      app.use((req, _res, next) => {
+        req.actor = { source: "session", ...actor };
+        next();
+      });
+      app.use("/api", issueRoutes(db, { wakeup: async () => null } as never));
+      app.use(errorHandler);
+      return app;
+    };
+    const first = await issueService(db).create(companyId, {
+      title: "Bulk delete one",
+    });
+    const second = await issueService(db).create(companyId, {
+      title: "Bulk delete two",
+    });
+    const missingId = randomUUID();
+
+    expect(
+      (
+        await request(appFor({ type: "board", userId: owner, companyIds: [companyId] }))
+          .delete(`/api/issues/${first.id}/comments`)
+      ).status,
+    ).toBe(403);
+
+    expect(
+      (
+        await request(appFor({ type: "agent", agentId, companyIds: [companyId] }))
+          .post(`/api/companies/${companyId}/issues/bulk-delete`)
+          .send({ issueIds: [first.id] })
+      ).status,
+    ).toBe(403);
+
+    const response = await request(
+      appFor({ type: "board", userId: owner, companyIds: [companyId] }),
+    )
+      .post(`/api/companies/${companyId}/issues/bulk-delete`)
+      .send({ issueIds: [first.id, second.id, missingId] });
+    expect(response.status).toBe(200);
+    expect(response.body.results).toHaveLength(3);
+    expect(
+      response.body.results.filter((result: { ok: boolean }) => result.ok),
+    ).toHaveLength(2);
+    const missingResult = response.body.results.find(
+      (result: { issueId: string }) => result.issueId === missingId,
+    );
+    expect(missingResult.ok).toBe(false);
+    expect(missingResult.error.status).toBe(404);
+
+    const remaining = await db
+      .select({ id: issues.id })
+      .from(issues)
+      .where(eq(issues.companyId, companyId));
+    expect(
+      remaining.some((row) => row.id === first.id || row.id === second.id),
+    ).toBe(false);
+  });
   },
 );
 

@@ -315,6 +315,7 @@ import {
   Check,
   ChevronRight,
   Copy,
+  Eraser,
   EyeOff,
   ScanEye,
   Flag,
@@ -2919,6 +2920,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [treeControlOpen, setTreeControlOpen] = useState(false);
+  const [clearChatConfirmOpen, setClearChatConfirmOpen] = useState(false);
   const [treeControlWakeWarning, setTreeControlWakeWarning] = useState<
     string | null
   >(null);
@@ -5099,6 +5101,44 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
   });
 
+  const clearConversationHistory = useMutation({
+    mutationFn: async () => issuesApi.clearComments(issueId!),
+    onSuccess: async () => {
+      setClearChatConfirmOpen(false);
+      setOptimisticComments([]);
+      setLocallyQueuedCommentRunIds(new Map());
+      if (issue?.conversationAgentId) {
+        clearLegacyChatMessageRequests(
+          `${issue.companyId}:${currentUserId}:${issue.conversationAgentId}`,
+        );
+      }
+      await queryClient.resetQueries({
+        queryKey: queryKeys.issues.comments(issueId!),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: queryKeys.issues.queuedComments(issueId!),
+      });
+      invalidateIssueDetail();
+      invalidateIssueThreadLazily();
+      invalidateIssueCollections();
+      pushToast({
+        title: "Chat history cleared",
+        body: "All messages were deleted and a fresh session started.",
+        tone: "success",
+      });
+    },
+    onError: (err) => {
+      pushToast({
+        title: "Clear failed",
+        body:
+          err instanceof Error
+            ? err.message
+            : "Unable to clear chat history",
+        tone: "error",
+      });
+    },
+  });
+
   const handleCancelQueuedComment = useCallback(
     (commentId: string) => {
       if (commentId.startsWith("optimistic-")) {
@@ -5342,14 +5382,35 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   });
 
   const conversationAgent = conversation?.agent ?? agents?.find(agent => agent.id === issue?.conversationAgentId);
+  const canClearConversationHistory = Boolean(
+    issue?.conversationAgentId
+    && issue.conversationUserId
+    && issue.conversationUserId === currentUserId,
+  );
   useEffect(() => {
     if (conversationAgent) {
       setBreadcrumbs([{
         label: conversationAgent.name,
         leading: <Avatar className="size-6 shrink-0"><AvatarFallback>{deriveInitials(conversationAgent.name)}</AvatarFallback></Avatar>,
         leadingKey: `agent:${conversationAgent.id}`,
-        trailing: <Button variant="ghost" size="icon-xs" asChild aria-label={`Configure ${conversationAgent.name}`}><Link to={agentDetailHref(conversationAgent.id, "runtime")}><ChatSettings /></Link></Button>,
-        trailingKey: `configure:${conversationAgent.id}`,
+        trailing: (
+          <div className="flex items-center gap-0.5">
+            {canClearConversationHistory ? (
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Clear chat history"
+                title="Clear chat history"
+                onClick={() => setClearChatConfirmOpen(true)}
+                disabled={clearConversationHistory.isPending}
+              >
+                <Eraser />
+              </Button>
+            ) : null}
+            <Button variant="ghost" size="icon-xs" asChild aria-label={`Configure ${conversationAgent.name}`}><Link to={agentDetailHref(conversationAgent.id, "runtime")}><ChatSettings /></Link></Button>
+          </div>
+        ),
+        trailingKey: `actions:${conversationAgent.id}:${canClearConversationHistory ? "clear" : "configure"}`,
       }]);
       return;
     }
@@ -5366,6 +5427,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     ]);
   }, [
     conversationAgent,
+    canClearConversationHistory,
+    clearConversationHistory.isPending,
     breadcrumbTitle,
     breadcrumbIdentifier,
     hasLiveRuns,
@@ -8017,6 +8080,35 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               </TabsContent>
             )}
           </Tabs>
+
+          <Dialog open={clearChatConfirmOpen} onOpenChange={setClearChatConfirmOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Clear chat history?</DialogTitle>
+                <DialogDescription>
+                  All messages in this chat will be permanently deleted for both
+                  sides, and the agent starts a fresh session with no memory of
+                  this conversation. This cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setClearChatConfirmOpen(false)}
+                  disabled={clearConversationHistory.isPending}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => clearConversationHistory.mutate()}
+                  disabled={clearConversationHistory.isPending}
+                >
+                  {clearConversationHistory.isPending ? "Clearing…" : "Clear history"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           <TaskTreeControlDialog
             open={treeControlOpen}
