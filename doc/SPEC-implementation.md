@@ -1048,6 +1048,8 @@ Invites tab does not hide this Cloud action.
 - `POST /issues/:issueId/admin/force-release` (board-only lock recovery)
 - `POST /issues/:issueId/comments`
 - `GET /issues/:issueId/comments`
+- `DELETE /issues/:issueId/comments` (board-only; conversation owner only; tombstones every message of an agent-chat conversation and resets its session)
+- `POST /companies/:companyId/issues/bulk-delete` (board-only; per-item `{ issueId, ok, error }` results, same deletion semantics as `DELETE /issues/:issueId`)
 - `POST /companies/:companyId/issues/:issueId/attachments` (multipart upload)
 - `GET /issues/:issueId/attachments`
 - `GET /attachments/:attachmentId/content`

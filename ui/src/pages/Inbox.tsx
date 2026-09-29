@@ -114,6 +114,7 @@ import {
   ChevronRight,
   ArrowUpDown,
   Layers,
+  ListChecks,
   Plus,
   XCircle,
   X,
@@ -122,9 +123,10 @@ import {
   Search,
   ListTree,
 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { PageTabBar } from "../components/PageTabBar";
-import type { Approval, HeartbeatRun, Issue, JoinRequest } from "@paperclipai/shared";
+import type { Approval, BulkDeleteIssueItemResult, HeartbeatRun, Issue, JoinRequest } from "@paperclipai/shared";
 import {
   ACTIONABLE_APPROVAL_STATUSES,
   DEFAULT_INBOX_ISSUE_COLUMNS,
@@ -806,6 +808,11 @@ function StreamlinedInbox() {
   const location = useLocation();
   const queryClient = useQueryClient();
   const [actionError, setActionError] = useState<string | null>(null);
+  const [bulkSelectMode, setBulkSelectMode] = useState(false);
+  const [selectedIssueIds, setSelectedIssueIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
   const { keyboardShortcutsEnabled } = useGeneralSettings();
   const { data: experimentalSettings } = useQuery({
     queryKey: queryKeys.instance.experimentalSettings,
@@ -888,6 +895,8 @@ function StreamlinedInbox() {
     saveLastInboxTab(tab);
     setSelectedIndex(-1);
     setSearchQuery("");
+    setBulkSelectMode(false);
+    setSelectedIssueIds(new Set());
   }, [tab]);
 
   const previousSelectedCompanyIdRef = useRef<string | null>(selectedCompanyId);
@@ -1998,6 +2007,115 @@ function StreamlinedInbox() {
     },
   });
 
+  const bulkDeleteIssuesMutation = useMutation({
+    mutationFn: async (issueIds: string[]) => {
+      const allResults: BulkDeleteIssueItemResult[] = [];
+      for (let start = 0; start < issueIds.length; start += 100) {
+        const response = await issuesApi.bulkDelete(
+          selectedCompanyId!,
+          issueIds.slice(start, start + 100),
+        );
+        allResults.push(...response.results);
+      }
+      return allResults;
+    },
+    onMutate: (issueIds) => {
+      setActionError(null);
+      setFadingOutIssues((prev) => {
+        const next = new Set(prev);
+        for (const issueId of issueIds) next.add(issueId);
+        return next;
+      });
+    },
+    onSuccess: async (results) => {
+      const deletedIds = results.filter((result) => result.ok).map((result) => result.issueId);
+      const failedResults = results.filter((result) => !result.ok);
+      if (selectedCompanyId) {
+        for (const issueId of deletedIds) {
+          removeIssueFromInboxCaches(queryClient, selectedCompanyId, issueId);
+        }
+      }
+      setSelectedIssueIds(new Set());
+      setBulkSelectMode(false);
+      setFadingOutIssues((prev) => {
+        const next = new Set(prev);
+        for (const result of results) next.delete(result.issueId);
+        return next;
+      });
+      invalidateInboxIssueQueryCaches();
+      if (failedResults.length === 0) {
+        pushToast({
+          title: `Deleted ${deletedIds.length} ${deletedIds.length === 1 ? "item" : "items"}`,
+          tone: "success",
+        });
+      } else {
+        setActionError(
+          `${failedResults.length} of ${results.length} items could not be deleted: ${failedResults[0].error?.message ?? "unknown error"}`,
+        );
+      }
+    },
+    onError: (err, issueIds) => {
+      setActionError(err instanceof Error ? err.message : "Bulk delete failed");
+      setFadingOutIssues((prev) => {
+        const next = new Set(prev);
+        for (const issueId of issueIds) next.delete(issueId);
+        return next;
+      });
+    },
+  });
+
+  const bulkArchiveIssuesMutation = useMutation({
+    mutationFn: async (issueIds: string[]) => {
+      await Promise.all(issueIds.map((issueId) => issuesApi.archiveFromInbox(issueId)));
+    },
+    onMutate: (issueIds) => {
+      noteInboxSortInteraction();
+      setActionError(null);
+      setArchivingIssueIds((prev) => {
+        const next = new Set(prev);
+        for (const issueId of issueIds) next.add(issueId);
+        return next;
+      });
+      if (selectedCompanyId) {
+        for (const issueId of issueIds) beginLocalInboxArchive(selectedCompanyId, issueId);
+      }
+    },
+    onSuccess: (_data, issueIds) => {
+      if (selectedCompanyId) {
+        for (const issueId of issueIds) boundLocalInboxArchive(selectedCompanyId, issueId);
+      }
+      setSelectedIssueIds(new Set());
+      setBulkSelectMode(false);
+      pushToast({
+        title: `Archived ${issueIds.length} ${issueIds.length === 1 ? "item" : "items"}`,
+        tone: "success",
+      });
+    },
+    onError: (err, issueIds) => {
+      setActionError(err instanceof Error ? err.message : "Bulk archive failed");
+      if (selectedCompanyId) {
+        for (const issueId of issueIds) clearLocalInboxArchive(selectedCompanyId, issueId);
+      }
+    },
+    onSettled: (_data, _error, issueIds) => {
+      setArchivingIssueIds((prev) => {
+        const next = new Set(prev);
+        for (const issueId of issueIds) next.delete(issueId);
+        return next;
+      });
+      invalidateInboxIssueQueryCaches();
+    },
+  });
+
+  const toggleBulkSelectedIssue = useCallback((issueId: string) => {
+    setSelectedIssueIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(issueId)) next.delete(issueId);
+      else next.add(issueId);
+      return next;
+    });
+  }, []);
+
   const handleMarkNonIssueRead = useCallback((key: string) => {
     setFadingNonIssueItems((prev) => new Set(prev).add(key));
     markItemRead(key);
@@ -2637,6 +2755,23 @@ function StreamlinedInbox() {
                 iconOnly
                 rowPresentation={streamlinedUiEnabled ? "task" : "legacy"}
               />
+              {canArchiveFromTab && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 shrink-0"
+                  aria-pressed={bulkSelectMode}
+                  data-testid="inbox-bulk-select-toggle"
+                  onClick={() => {
+                    setBulkSelectMode((enabled) => !enabled);
+                    setSelectedIssueIds(new Set());
+                  }}
+                >
+                  <ListChecks className="h-3.5 w-3.5" />
+                  {bulkSelectMode ? "Cancel" : "Select"}
+                </Button>
+              )}
               {canMarkAllRead && (
                 <>
                   <Button
@@ -2684,6 +2819,90 @@ function StreamlinedInbox() {
           </p>
         ) : null}
       />
+
+      {bulkSelectMode && canArchiveFromTab ? (
+        <div
+          className="sticky top-2 z-10 flex flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
+          data-testid="inbox-bulk-bar"
+        >
+          <span className="mr-auto text-sm text-muted-foreground">
+            {selectedIssueIds.size} selected
+          </span>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() =>
+              setSelectedIssueIds(
+                new Set(
+                  visibleMineIssues
+                    .filter((issue) => matchesInboxIssueSearch(issue, normalizedSearchQuery))
+                    .map((issue) => issue.id),
+                ),
+              )
+            }
+          >
+            Select all
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            onClick={() => setSelectedIssueIds(new Set())}
+            disabled={selectedIssueIds.size === 0}
+          >
+            Deselect all
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => bulkArchiveIssuesMutation.mutate([...selectedIssueIds])}
+            disabled={selectedIssueIds.size === 0 || bulkArchiveIssuesMutation.isPending}
+          >
+            {bulkArchiveIssuesMutation.isPending ? "Archiving…" : "Archive"}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            onClick={() => setShowBulkDeleteConfirm(true)}
+            disabled={selectedIssueIds.size === 0 || bulkDeleteIssuesMutation.isPending}
+          >
+            Delete…
+          </Button>
+        </div>
+      ) : null}
+
+      <Dialog open={showBulkDeleteConfirm} onOpenChange={setShowBulkDeleteConfirm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete selected items?</DialogTitle>
+            <DialogDescription>
+              This permanently deletes {selectedIssueIds.size} selected{" "}
+              {selectedIssueIds.size === 1 ? "task" : "tasks"}, including
+              comments and attachments. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowBulkDeleteConfirm(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={selectedIssueIds.size === 0 || bulkDeleteIssuesMutation.isPending}
+              onClick={() => {
+                setShowBulkDeleteConfirm(false);
+                bulkDeleteIssuesMutation.mutate([...selectedIssueIds]);
+              }}
+            >
+              {bulkDeleteIssuesMutation.isPending
+                ? "Deleting…"
+                : `Delete ${selectedIssueIds.size} ${selectedIssueIds.size === 1 ? "item" : "items"}`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {approvalsError && <p className="text-sm text-destructive">{approvalsError.message}</p>}
       {actionError && <p className="text-sm text-destructive">{actionError}</p>}
@@ -2765,6 +2984,16 @@ function StreamlinedInbox() {
                   const isUnread = issue.isUnreadForMe && !fadingOutIssues.has(issue.id);
                   const isFading = fadingOutIssues.has(issue.id);
                   const isArchiving = archivingIssueIds.has(issue.id);
+                  const bulkSelected = bulkSelectMode && selectedIssueIds.has(issue.id);
+                  const bulkCheckbox = bulkSelectMode ? (
+                    <Checkbox
+                      checked={bulkSelected}
+                      onCheckedChange={() => toggleBulkSelectedIssue(issue.id)}
+                      aria-label={bulkSelected ? `Deselect ${issue.title}` : `Select ${issue.title}`}
+                      data-testid="inbox-bulk-select-checkbox"
+                      className="shrink-0"
+                    />
+                  ) : null;
                   const project = issue.projectId ? projectById.get(issue.projectId) ?? null : null;
                   const assigneeUserProfile = issue.assigneeUserId
                     ? companyUserProfileMap.get(issue.assigneeUserId) ?? null
@@ -2801,9 +3030,13 @@ function StreamlinedInbox() {
                       className={
                         isArchiving
                           ? "pointer-events-none -translate-x-4 scale-(--s-0_98) opacity-0 transition-all duration-200 ease-out"
-                          : "transition-all duration-200 ease-out"
+                          : bulkSelected
+                            ? "bg-accent/50 transition-all duration-200 ease-out"
+                            : "transition-all duration-200 ease-out"
                       }
-                      leadingControl={streamlinedUiEnabled && nestingEnabled && hasChildren && collapseParentId ? (
+                      leadingControl={bulkSelectMode && streamlinedUiEnabled
+                        ? bulkCheckbox
+                        : streamlinedUiEnabled && nestingEnabled && hasChildren && collapseParentId ? (
                         <button
                           type="button"
                           data-slot="icon-button"
@@ -2836,6 +3069,7 @@ function StreamlinedInbox() {
                         : undefined}
                       desktopMetaLeading={!streamlinedUiEnabled ? (
                         <>
+                          {bulkCheckbox}
                           {nestingEnabled ? (
                             depth === 0 && hasChildren && collapseParentId ? (
                               <button
@@ -2873,7 +3107,9 @@ function StreamlinedInbox() {
                       mobileTitleMeta={streamlinedUiEnabled ? issueActivityTimestamp(issue) : undefined}
                       mobileMeta={streamlinedUiEnabled ? undefined : issueActivityText(issue).toLowerCase()}
                       mobileLeading={!streamlinedUiEnabled ? (
-                        depth === 0 && hasChildren && collapseParentId ? (
+                        bulkSelectMode ? (
+                          bulkCheckbox
+                        ) : depth === 0 && hasChildren && collapseParentId ? (
                           <button
                             type="button"
                             data-slot="icon-button"

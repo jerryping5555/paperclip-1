@@ -34,6 +34,7 @@ const apiMocks = vi.hoisted(() => ({
   issueLabels: vi.fn(),
   archiveFromInbox: vi.fn(),
   unarchiveFromInbox: vi.fn(),
+  bulkDeleteIssues: vi.fn(),
   agentsList: vi.fn(),
   heartbeatRunsList: vi.fn(),
   liveRunsForCompany: vi.fn(),
@@ -78,6 +79,7 @@ vi.mock("../api/issues", () => ({
     markUnread: vi.fn(),
     archiveFromInbox: apiMocks.archiveFromInbox,
     unarchiveFromInbox: apiMocks.unarchiveFromInbox,
+    bulkDelete: apiMocks.bulkDeleteIssues,
   },
 }));
 
@@ -362,6 +364,12 @@ function resetInboxApiMocks() {
   apiMocks.issueLabels.mockResolvedValue([]);
   apiMocks.archiveFromInbox.mockResolvedValue({ id: "issue-1", archivedAt: new Date() });
   apiMocks.unarchiveFromInbox.mockResolvedValue({ id: "issue-1", archivedAt: new Date() });
+  apiMocks.bulkDeleteIssues.mockResolvedValue({
+    results: [
+      { issueId: "issue-1", ok: true, error: null },
+      { issueId: "issue-2", ok: true, error: null },
+    ],
+  });
   apiMocks.agentsList.mockResolvedValue([]);
   apiMocks.heartbeatRunsList.mockResolvedValue([]);
   apiMocks.liveRunsForCompany.mockResolvedValue([]);
@@ -515,6 +523,91 @@ describe("Inbox toolbar", () => {
       expect(button.className).toContain("h-8");
       expect(button.className).toContain("min-w-(--sz-64px)");
       expect(button.className).toContain("justify-center");
+    });
+
+    act(() => root.unmount());
+  });
+
+  it("selects multiple Mine rows and bulk deletes them after confirmation", async () => {
+    routerMock.location.pathname = "/inbox/mine";
+    localStorage.setItem("paperclip:inbox:group-by", "none");
+    const first = createIssue({ id: "issue-1", identifier: "PAP-904", title: "Bulk delete one" });
+    const second = createIssue({ id: "issue-2", identifier: "PAP-905", title: "Bulk delete two" });
+    apiMocks.issuesList.mockResolvedValue([first, second]);
+    apiMocks.bulkDeleteIssues.mockResolvedValue({
+      results: [
+        { issueId: "issue-1", ok: true, error: null },
+        { issueId: "issue-2", ok: true, error: null },
+      ],
+    });
+
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, staleTime: 0, gcTime: 0 } },
+    });
+    const root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        <QueryClientProvider client={queryClient}>
+          <Inbox />
+        </QueryClientProvider>,
+      );
+    });
+    await vi.waitFor(() => {
+      expect(container.textContent).toContain("Bulk delete one");
+    });
+
+    expect(container.querySelector('[data-testid="inbox-bulk-bar"]')).toBeNull();
+    expect(container.querySelector('[data-testid="inbox-bulk-select-checkbox"]')).toBeNull();
+
+    const selectToggle = container.querySelector<HTMLButtonElement>(
+      '[data-testid="inbox-bulk-select-toggle"]',
+    );
+    expect(selectToggle).not.toBeNull();
+    act(() => {
+      selectToggle!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await vi.waitFor(() => {
+      expect(container.querySelector('[data-testid="inbox-bulk-bar"]')).not.toBeNull();
+    });
+
+    const checkboxes = container.querySelectorAll<HTMLButtonElement>(
+      '[data-testid="inbox-bulk-select-checkbox"]',
+    );
+    expect(checkboxes.length).toBe(2);
+    expect(container.textContent).toContain("0 selected");
+
+    const firstRowCheckbox = [...container.querySelectorAll<HTMLElement>('[data-slot="task-row"], [data-inbox-item]')]
+      .find((row) => row.textContent?.includes("Bulk delete one"))
+      ?.querySelector<HTMLButtonElement>('[data-testid="inbox-bulk-select-checkbox"]');
+    expect(firstRowCheckbox).toBeDefined();
+    act(() => {
+      firstRowCheckbox!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await vi.waitFor(() => {
+      expect(container.textContent).toContain("1 selected");
+    });
+
+    const deleteButton = [...container.querySelectorAll<HTMLButtonElement>('[data-testid="inbox-bulk-bar"] button')]
+      .find((button) => button.textContent === "Delete…");
+    expect(deleteButton).toBeDefined();
+    expect(deleteButton!.disabled).toBe(false);
+    act(() => {
+      deleteButton!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await vi.waitFor(() => {
+      expect(document.body.textContent).toContain("Delete selected items?");
+    });
+
+    const confirmButton = [...document.querySelectorAll<HTMLButtonElement>("button")]
+      .find((button) => button.textContent?.startsWith("Delete 1"));
+    expect(confirmButton).toBeDefined();
+    await act(async () => {
+      confirmButton!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    await vi.waitFor(() => {
+      expect(apiMocks.bulkDeleteIssues).toHaveBeenCalledWith("company-1", ["issue-1"]);
     });
 
     act(() => root.unmount());
