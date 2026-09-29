@@ -61,7 +61,7 @@ export function TextAttachmentPreview({ title, text, markdown, downloadUrl }: {
       </header>
       <div className="min-h-0 flex-1 overflow-auto p-4">
         {text.length === 0 ? <p className="text-sm text-muted-foreground">File is empty.</p>
-          : markdown && !raw ? <MarkdownBody>{text}</MarkdownBody>
+          : markdown && !raw ? <MarkdownBody mediaMode="reference">{text}</MarkdownBody>
           : <pre className="whitespace-pre-wrap break-words font-mono text-sm" aria-label={`${title} raw text`}>{text}</pre>}
       </div>
     </div>

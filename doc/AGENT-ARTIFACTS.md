@@ -216,7 +216,9 @@ Text file cards provide **Open in tab** beside their existing actions. CSV cards
 keep this action before and after loading their data preview.
 
 Markdown attachments offer **Rendered** and **Raw** views. Other supported text
-files display literal text. The viewer provides a download action. Preview reads
+files display literal text. Image references and diagram source remain inert;
+opening a preview does not load attachment-selected media URLs. The viewer
+provides a download action. Preview reads
 are limited to 512 KiB; oversized, unsupported, or unavailable files show an
 explicit fallback instead of attempting an unbounded render. A failed read can
 be retried. Workspace files continue to use the existing workspace file viewer.

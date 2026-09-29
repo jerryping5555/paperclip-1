@@ -63,7 +63,7 @@ for (const mobile of [false, true]) {
     await expect(panel.getByRole("heading", { name: "File charter", exact: true })).toBeVisible();
     await expect(panel.getByRole("tab", { name: "AGENTS.md", exact: true })).toHaveCount(1);
     await panel.getByRole("button", { name: "Open a new tab", exact: true }).click();
-    await page.getByRole("option", { name: "Artifacts", exact: true }).click();
+    await page.getByRole("option", { name: /^Artifacts(?: Already open)?$/ }).click();
     const markdownCard = panel.getByRole("article").filter({ has: page.getByRole("heading", { name: "Delivered AGENTS.md", exact: true }) });
     const review = markdownCard.locator("button[aria-expanded]");
     await review.click();

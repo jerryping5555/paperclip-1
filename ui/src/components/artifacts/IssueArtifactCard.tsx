@@ -131,8 +131,27 @@ export function IssueArtifactFile(props: IssueArtifactFileProps) {
       </>
     );
   }
-  if (localCsv && !tooLarge && data.data)
-    return <DataCard {...props} {...data.data} downloadUrl={downloadPath} actions={openTextAction} />;
+  if (localCsv && !tooLarge && data.data) {
+    return (
+      <DataCard
+        {...props}
+        {...data.data}
+        downloadUrl={downloadPath}
+        actions={
+          <>
+            {openTextAction}
+            {downloadPath ? (
+              <Button asChild size="sm" variant="outline">
+                <a href={downloadPath} download={props.filename}>
+                  Download file
+                </a>
+              </Button>
+            ) : null}
+          </>
+        }
+      />
+    );
+  }
   return (
     <div className="flex flex-col gap-2">
       <FileCard

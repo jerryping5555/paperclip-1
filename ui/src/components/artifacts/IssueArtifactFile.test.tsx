@@ -72,6 +72,9 @@ describe("CSV preview consent", () => {
         expect.any(AbortSignal),
       );
       expect(container.textContent).toContain("View data");
+      const download = container.querySelector<HTMLAnchorElement>('a[download="report-0.csv"]');
+      expect(download?.textContent).toBe("Download file");
+      expect(download?.getAttribute("href")).toBe("/api/attachments/csv-0/content?download=1");
       const openAfterPreview = container.querySelector<HTMLButtonElement>('button[aria-label="Open in tab: Data 0"]');
       await act(async () => openAfterPreview!.click());
       expect(openText).toHaveBeenCalledTimes(2);
