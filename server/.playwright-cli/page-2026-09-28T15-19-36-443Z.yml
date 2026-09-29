@@ -1,0 +1,405 @@
+- generic [active] [ref=f4e1]:
+  - banner [ref=f4e2]:
+    - generic [ref=f4e3]:
+      - link [ref=f4e4] [cursor=pointer]:
+        - /url: https://kidsfaithacademy.com/
+        - img "Kids Faith Academy — sowing seeds of faith" [ref=f4e5]
+      - checkbox "Menu"
+      - navigation "Primary" [ref=f4e6]:
+        - link "Home" [ref=f4e7] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/
+        - link "Store" [ref=f4e8] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/shop/
+        - link "About" [ref=f4e9] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/about/
+        - link "Free Products" [ref=f4e10] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/product-category/free-product/
+        - link "Contact" [ref=f4e11] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/contact/
+      - link "Cart" [ref=f4e12] [cursor=pointer]:
+        - /url: https://kidsfaithacademy.com/cart/
+  - link "Skip to content" [ref=f4e13] [cursor=pointer]:
+    - /url: "#content"
+  - generic [ref=f4e14]:
+    - text: 1 1
+    - main [ref=f4e18]:
+      - article [ref=f4e19]:
+        - heading "Checkout" [level=1] [ref=f4e21]
+        - generic [ref=f4e23]:
+          - status [ref=f4e25]:
+            - text:  Have a coupon?
+            - button "Enter your coupon code" [ref=f4e26] [cursor=pointer]: Click here to enter your code
+          - form "Checkout" [ref=f4e27]:
+            - generic [ref=f4e29]:
+              - generic [ref=f4e30]:
+                - heading "Billing details" [level=3] [ref=f4e31]
+                - generic [ref=f4e32]:
+                  - paragraph [ref=f4e33]:
+                    - generic [ref=f4e34]: First name *
+                    - textbox "First name" [ref=f4e36]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e37]:
+                    - generic [ref=f4e38]: Last name *
+                    - textbox "Last name" [ref=f4e40]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e41]:
+                    - generic [ref=f4e42]: Company name (optional)
+                    - textbox "Company name (optional)" [ref=f4e44]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e45]:
+                    - generic [ref=f4e46]: Country / Region *
+                    - combobox "Country / Region" [ref=f4e48]:
+                      - option "Select a country / region…"
+                      - option "Afghanistan"
+                      - option "Åland Islands"
+                      - option "Albania"
+                      - option "Algeria"
+                      - option "American Samoa"
+                      - option "Andorra"
+                      - option "Angola"
+                      - option "Anguilla"
+                      - option "Antarctica"
+                      - option "Antigua and Barbuda"
+                      - option "Argentina"
+                      - option "Armenia"
+                      - option "Aruba"
+                      - option "Australia" [selected]
+                      - option "Austria"
+                      - option "Azerbaijan"
+                      - option "Bahamas"
+                      - option "Bahrain"
+                      - option "Bangladesh"
+                      - option "Barbados"
+                      - option "Belarus"
+                      - option "Belau"
+                      - option "Belgium"
+                      - option "Belize"
+                      - option "Benin"
+                      - option "Bermuda"
+                      - option "Bhutan"
+                      - option "Bolivia"
+                      - option "Bonaire, Saint Eustatius and Saba"
+                      - option "Bosnia and Herzegovina"
+                      - option "Botswana"
+                      - option "Bouvet Island"
+                      - option "Brazil"
+                      - option "British Indian Ocean Territory"
+                      - option "Brunei"
+                      - option "Bulgaria"
+                      - option "Burkina Faso"
+                      - option "Burundi"
+                      - option "Cambodia"
+                      - option "Cameroon"
+                      - option "Canada"
+                      - option "Cape Verde"
+                      - option "Cayman Islands"
+                      - option "Central African Republic"
+                      - option "Chad"
+                      - option "Chile"
+                      - option "China"
+                      - option "Christmas Island"
+                      - option "Cocos (Keeling) Islands"
+                      - option "Colombia"
+                      - option "Comoros"
+                      - option "Congo (Brazzaville)"
+                      - option "Congo (Kinshasa)"
+                      - option "Cook Islands"
+                      - option "Costa Rica"
+                      - option "Croatia"
+                      - option "Cuba"
+                      - option "Curaçao"
+                      - option "Cyprus"
+                      - option "Czech Republic"
+                      - option "Denmark"
+                      - option "Djibouti"
+                      - option "Dominica"
+                      - option "Dominican Republic"
+                      - option "Ecuador"
+                      - option "Egypt"
+                      - option "El Salvador"
+                      - option "Equatorial Guinea"
+                      - option "Eritrea"
+                      - option "Estonia"
+                      - option "Eswatini"
+                      - option "Ethiopia"
+                      - option "Falkland Islands"
+                      - option "Faroe Islands"
+                      - option "Fiji"
+                      - option "Finland"
+                      - option "France"
+                      - option "French Guiana"
+                      - option "French Polynesia"
+                      - option "French Southern Territories"
+                      - option "Gabon"
+                      - option "Gambia"
+                      - option "Georgia"
+                      - option "Germany"
+                      - option "Ghana"
+                      - option "Gibraltar"
+                      - option "Greece"
+                      - option "Greenland"
+                      - option "Grenada"
+                      - option "Guadeloupe"
+                      - option "Guam"
+                      - option "Guatemala"
+                      - option "Guernsey"
+                      - option "Guinea"
+                      - option "Guinea-Bissau"
+                      - option "Guyana"
+                      - option "Haiti"
+                      - option "Heard Island and McDonald Islands"
+                      - option "Honduras"
+                      - option "Hong Kong"
+                      - option "Hungary"
+                      - option "Iceland"
+                      - option "India"
+                      - option "Indonesia"
+                      - option "Iran"
+                      - option "Iraq"
+                      - option "Ireland"
+                      - option "Isle of Man"
+                      - option "Israel"
+                      - option "Italy"
+                      - option "Ivory Coast"
+                      - option "Jamaica"
+                      - option "Japan"
+                      - option "Jersey"
+                      - option "Jordan"
+                      - option "Kazakhstan"
+                      - option "Kenya"
+                      - option "Kiribati"
+                      - option "Kosovo"
+                      - option "Kuwait"
+                      - option "Kyrgyzstan"
+                      - option "Laos"
+                      - option "Latvia"
+                      - option "Lebanon"
+                      - option "Lesotho"
+                      - option "Liberia"
+                      - option "Libya"
+                      - option "Liechtenstein"
+                      - option "Lithuania"
+                      - option "Luxembourg"
+                      - option "Macao"
+                      - option "Madagascar"
+                      - option "Malawi"
+                      - option "Malaysia"
+                      - option "Maldives"
+                      - option "Mali"
+                      - option "Malta"
+                      - option "Marshall Islands"
+                      - option "Martinique"
+                      - option "Mauritania"
+                      - option "Mauritius"
+                      - option "Mayotte"
+                      - option "Mexico"
+                      - option "Micronesia"
+                      - option "Moldova"
+                      - option "Monaco"
+                      - option "Mongolia"
+                      - option "Montenegro"
+                      - option "Montserrat"
+                      - option "Morocco"
+                      - option "Mozambique"
+                      - option "Myanmar"
+                      - option "Namibia"
+                      - option "Nauru"
+                      - option "Nepal"
+                      - option "Netherlands"
+                      - option "New Caledonia"
+                      - option "New Zealand"
+                      - option "Nicaragua"
+                      - option "Niger"
+                      - option "Nigeria"
+                      - option "Niue"
+                      - option "Norfolk Island"
+                      - option "North Korea"
+                      - option "North Macedonia"
+                      - option "Northern Mariana Islands"
+                      - option "Norway"
+                      - option "Oman"
+                      - option "Pakistan"
+                      - option "Palestinian Territory"
+                      - option "Panama"
+                      - option "Papua New Guinea"
+                      - option "Paraguay"
+                      - option "Peru"
+                      - option "Philippines"
+                      - option "Pitcairn"
+                      - option "Poland"
+                      - option "Portugal"
+                      - option "Puerto Rico"
+                      - option "Qatar"
+                      - option "Reunion"
+                      - option "Romania"
+                      - option "Russia"
+                      - option "Rwanda"
+                      - option "São Tomé and Príncipe"
+                      - option "Saint Barthélemy"
+                      - option "Saint Helena"
+                      - option "Saint Kitts and Nevis"
+                      - option "Saint Lucia"
+                      - option "Saint Martin (Dutch part)"
+                      - option "Saint Martin (French part)"
+                      - option "Saint Pierre and Miquelon"
+                      - option "Saint Vincent and the Grenadines"
+                      - option "Samoa"
+                      - option "San Marino"
+                      - option "Saudi Arabia"
+                      - option "Senegal"
+                      - option "Serbia"
+                      - option "Seychelles"
+                      - option "Sierra Leone"
+                      - option "Singapore"
+                      - option "Slovakia"
+                      - option "Slovenia"
+                      - option "Solomon Islands"
+                      - option "Somalia"
+                      - option "South Africa"
+                      - option "South Georgia/Sandwich Islands"
+                      - option "South Korea"
+                      - option "South Sudan"
+                      - option "Spain"
+                      - option "Sri Lanka"
+                      - option "Sudan"
+                      - option "Suriname"
+                      - option "Svalbard and Jan Mayen"
+                      - option "Sweden"
+                      - option "Switzerland"
+                      - option "Syria"
+                      - option "Taiwan"
+                      - option "Tajikistan"
+                      - option "Tanzania"
+                      - option "Thailand"
+                      - option "Timor-Leste"
+                      - option "Togo"
+                      - option "Tokelau"
+                      - option "Tonga"
+                      - option "Trinidad and Tobago"
+                      - option "Tunisia"
+                      - option "Türkiye"
+                      - option "Turkmenistan"
+                      - option "Turks and Caicos Islands"
+                      - option "Tuvalu"
+                      - option "Uganda"
+                      - option "Ukraine"
+                      - option "United Arab Emirates"
+                      - option "United Kingdom (UK)"
+                      - option "United States (US)"
+                      - option "United States (US) Minor Outlying Islands"
+                      - option "Uruguay"
+                      - option "Uzbekistan"
+                      - option "Vanuatu"
+                      - option "Vatican"
+                      - option "Venezuela"
+                      - option "Vietnam"
+                      - option "Virgin Islands (British)"
+                      - option "Virgin Islands (US)"
+                      - option "Wallis and Futuna"
+                      - option "Western Sahara"
+                      - option "Yemen"
+                      - option "Zambia"
+                      - option "Zimbabwe"
+                  - paragraph [ref=f4e49]:
+                    - generic [ref=f4e50]: Street address *
+                    - textbox "Street address" [ref=f4e52]:
+                      - /placeholder: House number and street name
+                  - paragraph [ref=f4e53]:
+                    - generic [ref=f4e54]: Apartment, suite, unit, etc. (optional)
+                    - textbox "Apartment, suite, unit, etc. (optional)" [ref=f4e56]
+                  - paragraph [ref=f4e57]:
+                    - generic [ref=f4e58]: Suburb *
+                    - textbox "Suburb" [ref=f4e60]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e61]:
+                    - generic [ref=f4e62]: State *
+                    - combobox "State" [ref=f4e64]:
+                      - option "Select an option…"
+                      - option "Australian Capital Territory"
+                      - option "New South Wales"
+                      - option "Northern Territory"
+                      - option "Queensland"
+                      - option "South Australia"
+                      - option "Tasmania"
+                      - option "Victoria" [selected]
+                      - option "Western Australia"
+                  - paragraph [ref=f4e65]:
+                    - generic [ref=f4e66]: Postcode *
+                    - textbox "Postcode" [ref=f4e68]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e69]:
+                    - generic [ref=f4e70]: Phone *
+                    - textbox "Phone" [ref=f4e72]:
+                      - /placeholder: ""
+                  - paragraph [ref=f4e73]:
+                    - generic [ref=f4e74]: Email address *
+                    - textbox "Email address" [ref=f4e76]:
+                      - /placeholder: ""
+              - generic [ref=f4e77]:
+                - heading "Additional information" [level=3] [ref=f4e78]
+                - paragraph [ref=f4e80]:
+                  - generic [ref=f4e81]: Order notes (optional)
+                  - textbox "Order notes (optional)" [ref=f4e83]:
+                    - /placeholder: Notes about your order, e.g. special notes for delivery.
+            - heading "Your order" [level=3] [ref=f4e84]
+            - generic [ref=f4e85]:
+              - table [ref=f4e86]:
+                - rowgroup [ref=f4e87]:
+                  - row [ref=f4e88]:
+                    - columnheader "Product" [ref=f4e89]
+                    - columnheader "Subtotal" [ref=f4e90]
+                - rowgroup [ref=f4e91]:
+                  - row [ref=f4e92]:
+                    - cell [ref=f4e93]:
+                      - text: FREE Conversation Starters for Kids Ages 6-12 – 80 Printable Table Talk Cards (Series 6)
+                      - strong [ref=f4e94]: × 1
+                    - cell "$0.00" [ref=f4e95]
+                - rowgroup [ref=f4e98]:
+                  - row [ref=f4e99]:
+                    - rowheader "Subtotal" [ref=f4e100]
+                    - cell "$0.00" [ref=f4e101]
+                  - row [ref=f4e104]:
+                    - rowheader "Total" [ref=f4e105]
+                    - cell "$0.00 AUD" [ref=f4e106]:
+                      - strong [ref=f4e107]:
+                        - generic [ref=f4e108]: $0.00
+                        - text: AUD
+              - generic [ref=f4e111]:
+                - generic [ref=f4e115]:
+                  - heading "Add it to your order for $50.00" [level=3] [ref=f4e117]:
+                    - generic [ref=f4e118]:
+                      - text: Add it to your order for
+                      - generic [ref=f4e119]: $50.00
+                  - generic [ref=f4e120]:
+                    - generic [ref=f4e122]:
+                      - heading [level=4] [ref=f4e123]:
+                        - 'link "Printable Bible Character Flashcards: The Complete Bible – 1,695 Illustrated Cards for Kids Christian Education" [ref=f4e124] [cursor=pointer]':
+                          - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+                      - link [ref=f4e126] [cursor=pointer]:
+                        - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+                      - paragraph [ref=f4e128]:
+                        - deletion [ref=f4e129]:
+                          - generic [ref=f4e130]: $80.00
+                        - generic [ref=f4e131]: "Original price was: $80.00."
+                        - insertion [ref=f4e132]:
+                          - generic [ref=f4e133]: $50.00
+                        - generic [ref=f4e134]: "Current price is: $50.00."
+                      - paragraph [ref=f4e135]: Our flagship flashcard collection - 1,695 illustrated Bible characters, found nowhere else.
+                    - generic [ref=f4e136]:
+                      - generic [ref=f4e137] [cursor=pointer]:
+                        - checkbox
+                      - heading "Get this exclusive offer now !!" [level=5] [ref=f4e139]
+                    - paragraph [ref=f4e141]: Tick the checkbox above to add this offer to your order.
+                - paragraph [ref=f4e144]:
+                  - text: Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our
+                  - link "privacy policy" [ref=f4e145] [cursor=pointer]:
+                    - /url: https://kidsfaithacademy.com/?page_id=3
+                  - text: .
+                - paragraph [ref=f4e146]:
+                  - generic [ref=f4e147] [cursor=pointer]:
+                    - checkbox "Yes — email me Bible resources, new products, freebies & monthly coupons. (Save on every order. Unsubscribe anytime.)" [checked] [ref=f4e148]
+                    - generic [ref=f4e149]:
+                      - text: Yes — email me
+                      - strong [ref=f4e150]: Bible resources, new products, freebies & monthly coupons
+                      - text: . (Save on every order. Unsubscribe anytime.)
+                - button "Place order" [ref=f4e151] [cursor=pointer]

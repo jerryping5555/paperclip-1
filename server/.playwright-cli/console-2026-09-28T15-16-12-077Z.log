@@ -1,0 +1,15 @@
+[    3535ms] [LOG] [LiteSpeed] Start Lazy Load @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[    4219ms] [LOG] [] @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  168574ms] [LOG] [LiteSpeed] Start Load JS Delayed @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  168577ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  168779ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  169144ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  169972ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  170257ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  170330ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  170336ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  170343ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  170349ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/product/general-conversation-starters-kids-6-12-series-6-80-printable/:698
+[  173325ms] [LOG] JQMIGRATE: Migrate is installed, version 3.4.1 @ https://kidsfaithacademy.com/wp-includes/js/jquery/jquery-migrate.min.js:1
+[  173369ms] [WARNING] Scripts that have a dependency on [wc-blocks-checkout] must be loaded in the footer, wps-ubo-lite-public-script was registered to load in the header, but has been switched to load in the footer instead. See https://github.com/woocommerce/woocommerce-gutenberg-products-block/pull/5059 @ wc-settings-dep-in-header-js-after:1
+[  177610ms] [WARNING] wrapup_order_bump not found @ https://kidsfaithacademy.com/wp-content/plugins/upsell-order-bump-offer-for-woocommerce/public/js/wps_ubo_lite_public_script.js:1226

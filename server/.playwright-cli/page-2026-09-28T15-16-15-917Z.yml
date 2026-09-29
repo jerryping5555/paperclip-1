@@ -1,0 +1,364 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link [ref=e4] [cursor=pointer]:
+        - /url: https://kidsfaithacademy.com/
+        - img "Kids Faith Academy — sowing seeds of faith" [ref=e5]
+      - checkbox "Menu"
+      - navigation "Primary" [ref=e6]:
+        - link "Home" [ref=e7] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/
+        - link "Store" [ref=e8] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/shop/
+        - link "About" [ref=e9] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/about/
+        - link "Free Products" [ref=e10] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/product-category/free-product/
+        - link "Contact" [ref=e11] [cursor=pointer]:
+          - /url: https://kidsfaithacademy.com/contact/
+      - link "Cart" [ref=e12] [cursor=pointer]:
+        - /url: https://kidsfaithacademy.com/cart/
+  - link "Skip to content" [ref=e13] [cursor=pointer]:
+    - /url: "#content"
+  - generic [ref=e14]:
+    - text: 0 0
+    - main [ref=e18]:
+      - generic [ref=e20]:
+        - generic [ref=e22]:
+          - link [ref=e24] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-02.png
+            - img "Back of kids conversation starter cards with cut guides, series 6" [ref=e25]
+          - link [ref=e27] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-01.png
+            - img "80 printable conversation starter question cards for kids ages 6-12, series 6" [ref=e28]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-03.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 3 (brand side)" [ref=e31]
+          - link [ref=e33] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-04.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 4 (question side)" [ref=e34]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-05.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 5 (brand side)" [ref=e37]
+          - link [ref=e39] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-06.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 6 (question side)" [ref=e40]
+          - link [ref=e42] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-07.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 7 (brand side)" [ref=e43]
+          - link [ref=e45] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-08.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 8 (question side)" [ref=e46]
+          - link [ref=e48] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-09.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 9 (brand side)" [ref=e49]
+          - link [ref=e51] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-10.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 10 (question side)" [ref=e52]
+          - link [ref=e54] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-11.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 11 (brand side)" [ref=e55]
+          - link [ref=e57] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-12.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 12 (question side)" [ref=e58]
+          - link [ref=e60] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-13.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 13 (brand side)" [ref=e61]
+          - link [ref=e63] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-14.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 14 (question side)" [ref=e64]
+          - link [ref=e66] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-15.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 15 (brand side)" [ref=e67]
+          - link [ref=e69] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-16.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 16 (question side)" [ref=e70]
+          - link [ref=e72] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-17.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 17 (brand side)" [ref=e73]
+          - link [ref=e75] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-18.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 18 (question side)" [ref=e76]
+          - link [ref=e78] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-19.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 19 (brand side)" [ref=e79]
+          - link [ref=e81] [cursor=pointer]:
+            - /url: https://kidsfaithacademy.com/wp-content/uploads/2026/09/general-conversation-starters-kids-6-12-series-6-80-printable-preview-20.png
+            - img "Printable conversation starter cards for kids 6-12, series 6, page 20 (question side)" [ref=e82]
+        - generic [ref=e83]:
+          - heading "FREE Conversation Starters for Kids Ages 6-12 – 80 Printable Table Talk Cards (Series 6)" [level=1] [ref=e84]
+          - paragraph [ref=e85]:
+            - generic [ref=e86]: $0.00
+          - paragraph [ref=e89]:
+            - strong [ref=e90]: 80 free printable conversation starters for kids ages 6–12 (Series 6)
+            - text: "— fun Table Talk question cards across 10 topics: feelings, family, school, hobbies, and more. Perfect for dinner talk, road trips, and classrooms."
+            - strong [ref=e91]: Free PDF download.
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - button "Decrease quantity" [ref=e94] [cursor=pointer]: −
+              - generic [ref=e95]: FREE Conversation Starters for Kids Ages 6-12 – 80 Printable Table Talk Cards (Series 6) quantity
+              - spinbutton "Product quantity" [ref=e96]: "1"
+              - button "Increase quantity" [ref=e97] [cursor=pointer]: +
+            - button "Add to cart" [ref=e98] [cursor=pointer]
+          - generic [ref=e99]:
+            - generic [ref=e100]: Secure checkout
+            - generic [ref=e104]: Instant download
+            - generic [ref=e108]: Print & reprint, forever
+          - generic [ref=e111]:
+            - generic [ref=e112]: "SKU: CS_6-12_24092606"
+            - generic [ref=e113]:
+              - text: "Categories:"
+              - link "Conversation Starters" [ref=e114] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product-category/conversation-starters/
+              - text: ","
+              - link "Free Products" [ref=e115] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product-category/free-product/
+              - text: ","
+              - link "New Release" [ref=e116] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product-category/new-release/
+        - generic [ref=e117]:
+          - tablist [ref=e118]:
+            - tab "Description" [ref=e119] [cursor=pointer]
+            - tab "Reviews (0)" [ref=e120] [cursor=pointer]
+          - tabpanel "Description" [ref=e121]:
+            - heading [level=2] [ref=e122]:
+              - text: Get Kids Talking With
+              - strong [ref=e123]: 80 Printable Conversation Starters (Series 6)
+            - paragraph [ref=e124]:
+              - text: Tired of one-word answers? These
+              - strong [ref=e125]: 80 free printable conversation starters for kids ages 6–12
+              - text: turn dinner time, road trips, and classrooms into real conversations — no screens required.
+            - heading "What’s Inside Your 20-Page Pack:" [level=3] [ref=e126]
+            - list [ref=e127]:
+              - listitem [ref=e128]:
+                - strong [ref=e129]: "80 Question Cards:"
+                - text: fresh Series 6 prompts like “Work alone or on a team?” across 10 kid-loved topics — Opinions, Feelings, Family Time, School Adventures, Future Dreams, and more.
+              - listitem [ref=e130]:
+                - strong [ref=e131]: "Print-ready:"
+                - text: 4 cards per page on a 20-page PDF, with cut guides for clean trimming.
+              - listitem [ref=e132]:
+                - strong [ref=e133]: "Flexible play:"
+                - text: pick a card at dinner, in the car, or in class — take turns answering.
+            - heading "Ways to Use Them:" [level=3] [ref=e134]
+            - paragraph [ref=e135]: Family dinner talk, homeschool morning time, Sunday school icebreakers, road-trip games, and classroom morning meetings.
+            - heading "How It Works:" [level=3] [ref=e136]
+            - list [ref=e137]:
+              - listitem [ref=e138]: Add this free printable to your cart and check out — no payment needed.
+              - listitem [ref=e139]: Download the 20-page PDF instantly and print.
+              - listitem [ref=e140]: Cut along the guides and start the conversation.
+            - paragraph [ref=e141]: If these cards get your family talking, please share Kids Faith Academy with a friend — and collect the other series for 480 fresh questions.
+          - tabpanel "Reviews (0)" [ref=e142]:
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - heading "Reviews" [level=2] [ref=e145]
+                - paragraph [ref=e146]: There are no reviews yet.
+              - paragraph [ref=e147]: Only logged in customers who have purchased this product may leave a review.
+        - complementary [ref=e148]:
+          - generic [ref=e149]: More Bible Activities for Kids
+          - heading "More Kids’ Bible Activities & Writing Journals" [level=2] [ref=e150]
+          - generic [ref=e151]: PRINTABLE + PHYSICAL
+          - generic [ref=e152]: Coloring pages, flashcards, conversation starters, worksheets & more — plus our 72-page full-color writing journals.
+          - generic [ref=e153]:
+            - link "NEW FREE Exodus 2 Bible Coloring Pages for Kids – 6-Page Printable PDF" [ref=e154] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/exodus-2-bible-coloring-pages-kids/
+              - generic [ref=e155]: NEW
+              - img "FREE Exodus 2 Bible Coloring Pages for Kids – 6-Page Printable PDF" [ref=e156]
+            - link "NEW FREE Exodus 1 Bible Coloring Pages for Kids – 6-Page Printable PDF" [ref=e157] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/exodus-1-bible-coloring-pages-kids/
+              - generic [ref=e158]: NEW
+              - img "FREE Exodus 1 Bible Coloring Pages for Kids – 6-Page Printable PDF" [ref=e159]
+            - link "NEW Matthew Bible Devotionals for Kids 6–12 — Complete 28-Chapter Bundle (A4)" [ref=e160] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/matthew-bible-devotionals-for-kids-bundle/
+              - generic [ref=e161]: NEW
+              - img "Matthew Bible Devotionals for Kids 6–12 — Complete 28-Chapter Bundle (A4)" [ref=e162]
+            - link "NEW Matthew 28 Bible Devotional for Kids 6–12 — He Is Risen!" [ref=e163] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/matthew-28-bible-devotional-for-kids-6-12/
+              - generic [ref=e164]: NEW
+              - img "Matthew 28 Bible Devotional for Kids 6–12 — He Is Risen!" [ref=e165]
+            - link "NEW Kids Christian Greeting Card Bundle – All 12 Designs (4×6)" [ref=e166] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/kids-christian-greeting-card-bundle-all-12-designs-4x6/
+              - generic [ref=e167]: NEW
+              - img "Kids Christian Greeting Card Bundle – All 12 Designs (4×6)" [ref=e168]
+            - link "NEW Kids Christian Greeting Card – Easter, He Is Risen (4×6)" [ref=e169] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/kids-christian-greeting-card-easter-he-is-risen-4x6/
+              - generic [ref=e170]: NEW
+              - img "Kids Christian Greeting Card – Easter, He Is Risen (4×6)" [ref=e171]
+            - link "JOURNAL Book 1 - Growing a Heart Like Jesus kids faith journal cover" [ref=e172] [cursor=pointer]:
+              - /url: /product/growing-a-heart-like-jesus-gratitude-kindness-courage-forgiveness-a-30-day-kids-bible-journal/
+              - generic [ref=e173]: JOURNAL
+              - img "Book 1 - Growing a Heart Like Jesus kids faith journal cover" [ref=e174]
+            - link "JOURNAL Book 2 - Growing the Fruit of the Spirit kids bible journal cover" [ref=e175] [cursor=pointer]:
+              - /url: /product/growing-the-fruit-of-the-spirit-patience-peace-self-control-joy-a-30-day-kids-bible-journal/
+              - generic [ref=e176]: JOURNAL
+              - img "Book 2 - Growing the Fruit of the Spirit kids bible journal cover" [ref=e177]
+            - link "JOURNAL Book 3 - Trusting God with All My Heart bible journal for kids cover" [ref=e178] [cursor=pointer]:
+              - /url: /product/trusting-god-with-all-my-heart-faith-obedience-love-a-30-day-kids-bible-journal/
+              - generic [ref=e179]: JOURNAL
+              - img "Book 3 - Trusting God with All My Heart bible journal for kids cover" [ref=e180]
+            - link "JOURNAL Book 4 - Shining Your Light for Jesus prayer journal for kids cover" [ref=e181] [cursor=pointer]:
+              - /url: /product/shining-your-light-for-jesus-generosity-compassion-service-encouragement-a-30-day-kids-bible-journal/
+              - generic [ref=e182]: JOURNAL
+              - img "Book 4 - Shining Your Light for Jesus prayer journal for kids cover" [ref=e183]
+            - link "JOURNAL Book 5 - Building Character That Lasts christian journal for kids cover" [ref=e184] [cursor=pointer]:
+              - /url: /product/building-character-that-lasts-honesty-humility-wisdom-perseverance-a-30-day-kids-bible-journal/
+              - generic [ref=e185]: JOURNAL
+              - img "Book 5 - Building Character That Lasts christian journal for kids cover" [ref=e186]
+          - generic [ref=e187]: Physical journals · $20 on Amazon
+          - link "Shop New Releases →" [ref=e188] [cursor=pointer]:
+            - /url: /product-category/new-release/
+          - link "View the Journals →" [ref=e189] [cursor=pointer]:
+            - /url: /product-category/journal/
+        - complementary [ref=e190]:
+          - generic [ref=e191]: Curated Amazon Deals
+          - heading "Best-Loved Kids’ Bible Books — On Sale" [level=2] [ref=e192]
+          - generic [ref=e193]: DEALS CHECKED DAILY
+          - generic [ref=e194]: Top-reviewed kids’ faith books, tracked for real discounts
+          - generic [ref=e195]:
+            - link "-7% How Can I Pray? (An engaging retelling of Jesus teaching his followers how to pray, including the Lord’s Prayer gift for toddlers and kids ages 2-4) (Little Me, Big God)" [ref=e196] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/how-can-i-pray-an-engaging-retelling-of-jesus-teaching-his-followers-how-to-pray-including-the-lords-prayer-gift-for-toddlers-and-kids-ages-2-4-little-me-big-god/
+              - generic [ref=e197]: "-7%"
+              - img "How Can I Pray? (An engaging retelling of Jesus teaching his followers how to pray, including the Lord’s Prayer gift for toddlers and kids ages 2-4) (Little Me, Big God)" [ref=e198]
+            - generic [ref=e199]: US$4.64
+            - link "-25.1% KJV Kids Bible (Hardcover, Red Letter)" [ref=e200] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/kjv-kids-bible-hardcover-red-letter/
+              - generic [ref=e201]: "-25.1%"
+              - img "KJV Kids Bible (Hardcover, Red Letter)" [ref=e202]
+            - generic [ref=e203]: US$14.95
+            - link "-50.2% CSB Kids Bible, Hardcover, Red Letter, Presentation Page, Study Helps for Children, Full-Color Inserts and Maps, Easy-to-Read Bible Serif Type" [ref=e204] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/csb-kids-bible-hardcover-red-letter-presentation-page-study-helps-for-children-full-color-inserts-and-maps-easy-to-read-bible-serif-type/
+              - generic [ref=e205]: "-50.2%"
+              - img "CSB Kids Bible, Hardcover, Red Letter, Presentation Page, Study Helps for Children, Full-Color Inserts and Maps, Easy-to-Read Bible Serif Type" [ref=e206]
+            - generic [ref=e207]: US$12.44
+            - link "-73.6% My First Hands-On Bible (Hardcover)" [ref=e208] [cursor=pointer]:
+              - /url: https://kidsfaithacademy.com/product/my-first-hands-on-bible-hardcover/
+              - generic [ref=e209]: "-73.6%"
+              - img "My First Hands-On Bible (Hardcover)" [ref=e210]
+            - generic [ref=e211]: US$4.48
+            - 'link "-47.2% NIV, Bible for Kids, Leathersoft, Purple, Red Letter, Comfort Print: Thinline Edition" [ref=e212] [cursor=pointer]':
+              - /url: https://kidsfaithacademy.com/product/niv-bible-for-kids-leathersoft-purple-red-letter-comfort-print-thinline-edition/
+              - generic [ref=e213]: "-47.2%"
+              - 'img "NIV, Bible for Kids, Leathersoft, Purple, Red Letter, Comfort Print: Thinline Edition" [ref=e214]'
+            - generic [ref=e215]: US$14.79
+          - link "See All Deals →" [ref=e216] [cursor=pointer]:
+            - /url: /amazon-deals/
+        - generic [ref=e218]:
+          - paragraph [ref=e219]: ⭐ Premium Bible Character Flashcards
+          - heading "Unlock the Complete Bible Character Collection" [level=2] [ref=e220]
+          - paragraph [ref=e221]: Loved by Sunday schools, homeschool families, and children’s ministries. Upgrade to premium illustrated flashcards — every Bible character covered, from Genesis to Revelation.
+          - generic [ref=e222]:
+            - generic [ref=e223]:
+              - generic [ref=e224]: MOST COMPLETE SET
+              - link [ref=e225] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+                - img "Complete Bible character flashcards for kids cover preview with illustrated cards" [ref=e226]
+              - 'link "Printable Bible Character Flashcards: The Complete Bible – 1,695 Illustrated Cards for Kids Christian Education" [ref=e228] [cursor=pointer]':
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+              - generic [ref=e229]:
+                - deletion [aria-hidden] [ref=e230]:
+                  - generic [ref=e231]: $80.00
+                - generic [ref=e232]: "Original price was: $80.00."
+                - insertion [aria-hidden] [ref=e233]:
+                  - generic [ref=e234]: $50.00
+                - generic [ref=e235]: "Current price is: $50.00."
+              - link "View Product →" [ref=e236] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+            - generic [ref=e237]:
+              - link [ref=e238] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-1-chronicles-154-illustrated-cards-for-kids-christian-education/
+                - img "1 Chronicles Bible character flashcards for kids cover preview for Christian education" [ref=e239]
+              - 'link "Printable Bible Character Flashcards: 1 Chronicles – 154 Illustrated Cards for Kids Christian Education" [ref=e241] [cursor=pointer]':
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-1-chronicles-154-illustrated-cards-for-kids-christian-education/
+              - generic [ref=e242]: $77.00
+              - link "View Product →" [ref=e244] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-1-chronicles-154-illustrated-cards-for-kids-christian-education/
+            - generic [ref=e245]:
+              - link [ref=e246] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-mark-83-illustrated-cards-for-kids-christian-education/
+                - img "Mark Bible character flashcards for kids cover preview for Christian education" [ref=e247]
+              - 'link "Printable Bible Character Flashcards: Mark – 83 Illustrated Cards for Kids Christian Education" [ref=e249] [cursor=pointer]':
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-mark-83-illustrated-cards-for-kids-christian-education/
+              - generic [ref=e250]: $41.50
+              - link "View Product →" [ref=e252] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-mark-83-illustrated-cards-for-kids-christian-education/
+            - generic [ref=e253]:
+              - link [ref=e254] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-luke-81-illustrated-cards-for-kids-christian-education/
+                - img "Luke Bible character flashcards for kids cover preview for Christian education" [ref=e255]
+              - 'link "Printable Bible Character Flashcards: Luke – 81 Illustrated Cards for Kids Christian Education" [ref=e257] [cursor=pointer]':
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-luke-81-illustrated-cards-for-kids-christian-education/
+              - generic [ref=e258]: $40.50
+              - link "View Product →" [ref=e260] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-luke-81-illustrated-cards-for-kids-christian-education/
+        - generic [ref=e261]:
+          - heading "Complete Your Collection" [level=2] [ref=e262]
+          - paragraph [ref=e263]: "Two featured resources from Kids Faith Academy: the complete 1,695-character Bible flashcard collection, found nowhere else, for reading time, storytelling and group games; and 80 Table Talk cards that help kids start real conversations at the dinner table and in Sunday school."
+          - list [ref=e264]:
+            - listitem [ref=e265]:
+              - link [ref=e267] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+                - img "Complete Bible character flashcards for kids cover preview with illustrated cards" [ref=e268]
+              - generic [ref=e269]:
+                - generic [ref=e270]: Bible Characters Flashcards
+                - link [ref=e271] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/printable-bible-character-flashcards-the-complete-bible-1695-illustrated-cards-for-kids-christian-education/
+                  - 'heading "Printable Bible Character Flashcards: The Complete Bible – 1,695 Illustrated Cards for Kids Christian Education" [level=2] [ref=e272]'
+                - generic [ref=e273]:
+                  - deletion [aria-hidden] [ref=e274]:
+                    - generic [ref=e275]: $80.00
+                  - generic [ref=e277]: "Original price was: $80.00."
+                  - insertion [aria-hidden] [ref=e278]:
+                    - generic [ref=e279]: $50.00
+                  - generic [ref=e281]: "Current price is: $50.00."
+            - listitem [ref=e282]:
+              - link [ref=e284] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/table-talk-cards-kids-80-printable-conversation-starters/
+                - img "Table Talk Cards preview - 8 printable conversation starter question cards for kids ages 6-12" [ref=e285]
+              - generic [ref=e286]:
+                - generic [ref=e287]: Conversation Starters
+                - link [ref=e288] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/table-talk-cards-kids-80-printable-conversation-starters/
+                  - heading "FREE Table Talk Cards for Kids Ages 6-12 – 80 Printable Conversation Starters" [level=2] [ref=e289]
+                - generic [ref=e290]: $0.00
+        - generic [ref=e293]:
+          - heading "Related products" [level=2] [ref=e294]
+          - list [ref=e295]:
+            - listitem [ref=e296]:
+              - link [ref=e298] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/new-testament-characters-coloring-series/
+                - img "NT Characters Bible Coloring Pages - FREE | Kids Faith Academy Free Bible Coloring Page - Theme 1 for Kids Ages 6-10" [ref=e299]
+              - generic [ref=e300]:
+                - generic [ref=e301]: Bible Coloring Pages
+                - link [ref=e302] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/new-testament-characters-coloring-series/
+                  - heading "NT Characters Bible Coloring Pages – FREE | Kids Faith Academy Bible Coloring Pages for Kids – FREE 6-Page Printable PDF Instant Download" [level=2] [ref=e303]
+                - generic [ref=e304]: $0.00
+            - listitem [ref=e307]:
+              - link [ref=e309] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/jesus-miracle-coloring-series/
+                - img "Jesus Miracles Bible Coloring Pages - FREE | Kids Faith Academy Free Bible Coloring Page - Theme 1 for Kids Ages 6-10" [ref=e310]
+              - generic [ref=e311]:
+                - generic [ref=e312]: Bible Coloring Pages
+                - link [ref=e313] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/jesus-miracle-coloring-series/
+                  - heading "Jesus Miracles Bible Coloring Pages – FREE | Kids Faith Academy Bible Coloring Pages for Kids – FREE 6-Page Printable PDF Instant Download" [level=2] [ref=e314]
+                - generic [ref=e315]: $0.00
+            - listitem [ref=e318]:
+              - link [ref=e320] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/issac-coloring-series/
+                - img "Isaac Bible Coloring Pages - FREE | Kids Faith Academy Free Bible Coloring Page - Theme 1 for Kids Ages 6-10" [ref=e321]
+              - generic [ref=e322]:
+                - generic [ref=e323]: Bible Coloring Pages
+                - link [ref=e324] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/issac-coloring-series/
+                  - heading "Isaac Bible Coloring Pages – FREE | Kids Faith Academy Bible Coloring Pages for Kids – FREE 6-Page Printable PDF Instant Download" [level=2] [ref=e325]
+                - generic [ref=e326]: $0.00
+            - listitem [ref=e329]:
+              - link [ref=e331] [cursor=pointer]:
+                - /url: https://kidsfaithacademy.com/product/aaron-coloring-series/
+                - img "Aaron Bible Coloring Pages - FREE | Kids Faith Academy Free Bible Coloring Page - Theme 1 for Kids Ages 6-10" [ref=e332]
+              - generic [ref=e333]:
+                - generic [ref=e334]: Bible Coloring Pages
+                - link [ref=e335] [cursor=pointer]:
+                  - /url: https://kidsfaithacademy.com/product/aaron-coloring-series/
+                  - heading "Aaron Bible Coloring Pages – FREE | Kids Faith Academy Bible Coloring Pages for Kids – FREE 6-Page Printable PDF Instant Download" [level=2] [ref=e336]
+                - generic [ref=e337]: $0.00

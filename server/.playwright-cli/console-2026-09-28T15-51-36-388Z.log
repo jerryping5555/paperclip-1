@@ -1,0 +1,576 @@
+[   13118ms] [LOG] [] @ https://kidsfaithacademy.com/checkout/:696
+[  186739ms] [LOG] [LiteSpeed] Start Load JS Delayed @ https://kidsfaithacademy.com/checkout/:696
+[  186741ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186747ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186752ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186823ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186829ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186832ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186835ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186836ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186840ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186843ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186846ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186854ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186860ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186864ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186872ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186876ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186881ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186885ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186891ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186900ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186907ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186914ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186919ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186922ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186927ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186932ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186936ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186942ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186946ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186950ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186954ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186956ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186960ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186963ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186966ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  186970ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187095ms] [WARNING] Scripts that have a dependency on [wc-blocks-checkout] must be loaded in the footer, wps-ubo-lite-public-script was registered to load in the header, but has been switched to load in the footer instead. See https://github.com/woocommerce/woocommerce-gutenberg-products-block/pull/5059 @ blob:https://kidsfaithacademy.com/225a5c36-8b86-44ce-8350-41434b37b081:0
+[  187101ms] ReferenceError: wp is not defined
+    at blob:https://kidsfaithacademy.com/64f18386-d903-4f58-a0a8-bb1cbe0a7000:1:1
+[  187102ms] ReferenceError: wp is not defined
+    at blob:https://kidsfaithacademy.com/2c1982ed-16a1-4b30-a606-1ffe2821507a:1:64
+    at blob:https://kidsfaithacademy.com/2c1982ed-16a1-4b30-a606-1ffe2821507a:1:130
+[  187102ms] ReferenceError: wp is not defined
+    at blob:https://kidsfaithacademy.com/f0c5ac6f-0c12-4308-96ee-a506f752153b:1:1
+[  187102ms] ReferenceError: moment is not defined
+    at blob:https://kidsfaithacademy.com/eaaccecb-9622-4b25-96f9-4f50a4e881a6:1:1
+[  187102ms] ReferenceError: wp is not defined
+    at blob:https://kidsfaithacademy.com/11161f5b-335e-45cb-8299-f35a73e60918:1:1
+[  187408ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187411ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187416ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187437ms] ReferenceError: _ is not defined
+    at blob:https://kidsfaithacademy.com/9c4afb0f-d95b-4761-a576-268d67610451:1:15
+[  187669ms] [WARNING] [Stripe.js] It looks like Stripe.js was loaded more than one time. Please only load it once per page. @ https://js.stripe.com/v3/?ver=3.0:0
+[  187669ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187672ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187675ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187680ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187684ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187690ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187693ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187696ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  187699ms] [LOG] [LiteSpeed] Load  JSHandle@node @ https://kidsfaithacademy.com/checkout/:696
+[  189743ms] [LOG] JQMIGRATE: Migrate is installed, version 3.4.1 @ https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1
+[  190436ms] [LOG] TypeError: Cannot read properties of undefined (reading 'isEmpty')
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1214:7136
+    at new Promise (<anonymous>)
+    at e (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1214:7100)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2890
+    at new Promise (<anonymous>)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2844)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2598)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:19809)
+    at new l (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:19709)
+    at 933 (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45308) @ https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1075
+[  192213ms] undefined
+[  192655ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  192925ms] [LOG] TypeError: Cannot read properties of undefined (reading 'isEmpty')
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1214:7136
+    at new Promise (<anonymous>)
+    at e (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1214:7100)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2890
+    at new Promise (<anonymous>)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2844)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:2598)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20862)
+    at h (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:136:3133)
+    at B.doAction (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:136:3238) @ https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1075
+[  192958ms] undefined
+[  194405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  196405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  198405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  200405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  202405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  204405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  206405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  208405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  210406ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  212405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  214405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  216405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  218404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  220405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  222405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  224404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  226404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  228404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  230404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  232405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  234404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  236405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  238405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  240405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  242405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  244405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  246405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  248405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  250407ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  252414ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  254404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  256405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  258405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  260404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  262405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  264404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  266405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  268405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  270404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  273002ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  274405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  276404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  278405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  280405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  282405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  284405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  286405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  288405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  290405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  292406ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  294405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  296405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  298405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  300404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  302405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  304405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  306405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  308405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  310404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  312404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  314405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  316404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  318404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  320405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  322404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  324405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  326405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  328404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  330404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  332405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  334405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  336404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  338406ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  340923ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  342404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  344405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  346405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  348405ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  350404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
+[  352404ms] ReferenceError: paypal is not defined
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:5917)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:20661)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:4284)
+    at l.value (https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:22938)
+    at https://kidsfaithacademy.com/wp-content/litespeed/js/c4547c1c93bb570f8e53cc0ccee37c16.js?ver=ce93f:1076:45379
