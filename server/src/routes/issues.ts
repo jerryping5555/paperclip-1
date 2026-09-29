@@ -15021,8 +15021,8 @@ export function issueRoutes(
         throw forbidden("Board user access is required to bulk delete issues");
       }
       const actor = getActorInfo(req);
-      const results: BulkDeleteIssueItemResult[] = [];
-      for (const issueId of req.body.issueIds) {
+      const resultsByIssueId = new Map<string, BulkDeleteIssueItemResult>();
+      const processIssue = async (issueId: string) => {
         try {
           const issue = await svc.getById(issueId);
           if (!issue || issue.companyId !== companyId) {
@@ -15038,7 +15038,7 @@ export function issueRoutes(
               ),
             );
           if (childRows.length > 0) {
-            results.push({
+            return {
               issueId,
               ok: false,
               error: {
@@ -15048,8 +15048,7 @@ export function issueRoutes(
                 }. Delete or move ${childRows.length === 1 ? "it" : "them"} first.`,
                 code: "issue_has_children",
               },
-            });
-            continue;
+            } satisfies BulkDeleteIssueItemResult;
           }
           const attachments = await svc.listAttachments(issueId);
           let removed: Awaited<ReturnType<typeof svc.remove>> = null;
@@ -15058,7 +15057,7 @@ export function issueRoutes(
           } catch (err) {
             const httpError = err as { status?: number; message?: string };
             if (httpError.status === 409) {
-              results.push({
+              return {
                 issueId,
                 ok: false,
                 error: {
@@ -15067,8 +15066,7 @@ export function issueRoutes(
                     "Task is referenced by records that must be kept (for example decision history). It cannot be deleted.",
                   code: "issue_referenced",
                 },
-              });
-              continue;
+              } satisfies BulkDeleteIssueItemResult;
             }
             throw err;
           }
@@ -15100,19 +15098,44 @@ export function issueRoutes(
             },
           });
           await queueTaskWatchdogEvaluation(issue, actor.runId);
-          results.push({ issueId, ok: true, error: null });
+          return { issueId, ok: true, error: null } satisfies BulkDeleteIssueItemResult;
         } catch (error) {
           const httpError = error as { status?: number; message?: string };
-          results.push({
+          return {
             issueId,
             ok: false,
             error: {
               status: httpError.status ?? 500,
               message: httpError.message ?? "Unknown error",
             },
-          });
+          } satisfies BulkDeleteIssueItemResult;
+        }
+      };
+      let pending = [...req.body.issueIds];
+      for (;;) {
+        let progressed = false;
+        const deferred: string[] = [];
+        for (const issueId of pending) {
+          if (resultsByIssueId.has(issueId)) continue;
+          const result = await processIssue(issueId);
+          if (result.ok || result.error?.code !== "issue_has_children") {
+            resultsByIssueId.set(issueId, result);
+            progressed = true;
+          } else {
+            deferred.push(issueId);
+          }
+        }
+        pending = deferred;
+        if (pending.length === 0 || !progressed) break;
+      }
+      for (const issueId of pending) {
+        if (!resultsByIssueId.has(issueId)) {
+          resultsByIssueId.set(issueId, await processIssue(issueId));
         }
       }
+      const results = req.body.issueIds
+        .map((issueId: string) => resultsByIssueId.get(issueId))
+        .filter((result: BulkDeleteIssueItemResult | undefined) => result !== undefined);
       res.json({ results });
     },
   );

@@ -1126,7 +1126,7 @@ const support = await getEmbeddedPostgresTestSupport();
       appFor({ type: "board", userId: owner, companyIds: [companyId] }),
     )
       .post(`/api/companies/${companyId}/issues/bulk-delete`)
-      .send({ issueIds: [first.id, second.id, parent.id, missingId] });
+      .send({ issueIds: [parent.id, first.id, second.id, missingId] });
     expect(response.status).toBe(200);
     expect(response.body.results).toHaveLength(4);
     expect(
@@ -1148,7 +1148,8 @@ const support = await getEmbeddedPostgresTestSupport();
       appFor({ type: "board", userId: owner, companyIds: [companyId] }),
     )
       .post(`/api/companies/${companyId}/issues/bulk-delete`)
-      .send({ issueIds: [child.id, parent.id] });
+      .send({ issueIds: [parent.id, child.id] });
+    expect(childResponse.body.results).toHaveLength(2);
     expect(
       childResponse.body.results.filter((result: { ok: boolean }) => result.ok),
     ).toHaveLength(2);
