@@ -44,7 +44,7 @@ describePg("decisionService", () => {
   beforeAll(async () => {
     tempDb = await startEmbeddedPostgresTestDatabase("paperclip-decisions-");
     db = createDb(tempDb.connectionString);
-  }, 20_000);
+  }, 120_000);
 
   beforeEach(async () => {
     process.env.PAPERCLIP_DECISION_SIGNING_SECRET = "0123456789abcdef0123456789abcdef";
@@ -119,6 +119,25 @@ describePg("decisionService", () => {
     expect(audit[0]?.details).toMatchObject({ decidedByUserId, originResponsibleUserId });
     expect(first.executions[0]?.activityLogId).toBe(audit[0]?.id);
     expect(wakes).toHaveLength(1);
+  });
+
+  it("removes a decision with its target links and effect executions and logs the deletion", async () => {
+    const created = await createCommentDecision();
+    await service().decide({ id: created.id, optionId: "yes", decidedByUserId, userActor: boardActor() });
+    expect(await db.select().from(decisionEffectExecutions).where(eq(decisionEffectExecutions.decisionId, created.id))).toHaveLength(1);
+    expect(await db.select().from(decisionTargetIssues).where(eq(decisionTargetIssues.decisionId, created.id))).toHaveLength(1);
+
+    const removed = await service().remove(created.id, { actorType: "user", actorId: decidedByUserId });
+    expect(removed?.id).toBe(created.id);
+    expect(removed?.status).toBe("decided");
+    expect(await db.select().from(decisions).where(eq(decisions.id, created.id))).toHaveLength(0);
+    expect(await db.select().from(decisionTargetIssues).where(eq(decisionTargetIssues.decisionId, created.id))).toHaveLength(0);
+    expect(await db.select().from(decisionEffectExecutions).where(eq(decisionEffectExecutions.decisionId, created.id))).toHaveLength(0);
+    const audit = await db.select().from(activityLog).where(eq(activityLog.action, "decision.deleted"));
+    expect(audit[0]?.entityId).toBe(created.id);
+    expect(audit[0]?.details).toMatchObject({ source: "bulk_delete", status: "decided", originIssueId });
+
+    await expect(service().remove(randomUUID(), { actorType: "user", actorId: decidedByUserId })).rejects.toThrow(/not found/i);
   });
 
   it("allows one double-decide winner and rejects the loser", async () => {

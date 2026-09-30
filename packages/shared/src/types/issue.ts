@@ -988,6 +988,20 @@ export interface BulkDeleteIssuesResponse {
   results: BulkDeleteIssueItemResult[];
 }
 
+export interface BulkDecisionItemResult {
+  decisionId: string;
+  ok: boolean;
+  error: {
+    status: number;
+    message: string;
+    code?: string;
+  } | null;
+}
+
+export interface BulkDecisionResponse {
+  results: BulkDecisionItemResult[];
+}
+
 export type IssueQueuedCommentProtocol = "paperclip_runner_v1" | "legacy";
 export type IssueQueuedCommentQueueState = "deferred" | "queued";
 export type IssueQueuedCommentSteeringDisposition =

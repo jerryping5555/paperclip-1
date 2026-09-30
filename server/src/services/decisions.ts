@@ -782,5 +782,27 @@ export function decisionService(db: Db, options: DecisionServiceOptions) {
     return { expired, resumed };
   }
 
-  return { create, createBundle, get, list, stats, outcome, decide, cancel, dismiss, sweepExpired };
+  async function remove(id: string, actor: { actorType: "agent" | "user"; actorId: string; runId?: string | null }) {
+    const current = await get(id);
+    if (!current) throw notFound("Decision not found");
+    const removed = await db.transaction(async (tx) => {
+      const [deleted] = await tx.delete(decisions).where(eq(decisions.id, id)).returning();
+      if (!deleted) return null;
+      await logActivity(tx as unknown as Db, {
+        companyId: deleted.companyId, actorType: actor.actorType, actorId: actor.actorId, runId: actor.runId,
+        action: "decision.deleted", entityType: "decision", entityId: deleted.id,
+        details: {
+          source: "bulk_delete",
+          status: deleted.status,
+          chosenOptionId: deleted.chosenOptionId,
+          originIssueId: deleted.originIssueId,
+          originAgentId: deleted.originAgentId,
+        },
+      });
+      return deleted;
+    });
+    return removed ?? null;
+  }
+
+  return { create, createBundle, get, list, stats, outcome, decide, cancel, dismiss, remove, sweepExpired };
 }

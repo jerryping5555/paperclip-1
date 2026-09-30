@@ -69,6 +69,10 @@ export const createDecisionArchiveProposalSchema = z.object({
   });
 });
 
+export const bulkDecisionIdsSchema = z.object({
+  decisionIds: z.array(z.string().uuid()).min(1).max(100),
+}).strict();
+
 export type CreateDecisionQueueInput = z.infer<typeof createDecisionQueueSchema>;
 export type UpdateDecisionQueueInput = z.infer<typeof updateDecisionQueueSchema>;
 export type AddDecisionQueueItemInput = z.infer<typeof addDecisionQueueItemSchema>;
@@ -76,3 +80,4 @@ export type RemoveDecisionQueueItemInput = z.infer<typeof removeDecisionQueueIte
 export type UpdateDecisionTriageInput = z.infer<typeof updateDecisionTriageSchema>;
 export type UpdateDecisionRetentionInput = z.infer<typeof updateDecisionRetentionSchema>;
 export type CreateDecisionArchiveProposalInput = z.infer<typeof createDecisionArchiveProposalSchema>;
+export type BulkDecisionIds = z.infer<typeof bulkDecisionIdsSchema>;

@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, Inbox } from "lucide-react";
-import type { Agent, AttentionItem, AttentionSubject } from "@paperclipai/shared";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CheckCircle2, Inbox, ListChecks } from "lucide-react";
+import type { Agent, AttentionItem, AttentionSubject, BulkDecisionItemResult } from "@paperclipai/shared";
 import { useNavigate, useSearchParams } from "@/lib/router";
 import { attentionApi } from "../api/attention";
 import { agentsApi } from "../api/agents";
@@ -47,6 +47,16 @@ import { DecisionQueueRail } from "../components/DecisionQueueRail";
 import { DecisionDateChips, type AttentionCustomRange } from "../components/DecisionDateChips";
 import { DecisionResolver } from "../components/DecisionResolver";
 import { IssueGroupHeader } from "../components/IssueGroupHeader";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 /** Curtain rows never expand; module-level so memoized rows see one identity. */
 const noopToggleExpand = () => {};
@@ -108,6 +118,9 @@ export function WhatNeedsMe() {
   const [agingOpen, setAgingOpen] = useState(false);
   const [decidedOpen, setDecidedOpen] = useState(false);
   const [expiredOpen, setExpiredOpen] = useState(false);
+  const [decisionSelectMode, setDecisionSelectMode] = useState(false);
+  const [selectedDecisionIds, setSelectedDecisionIds] = useState<Set<string>>(() => new Set());
+  const [showDecisionDeleteConfirm, setShowDecisionDeleteConfirm] = useState(false);
 
   // Date-range chips (PAP-16032 §4.2) — resolve to server-side activity bounds.
   const [dateRange, setDateRange] = useState<AttentionDateRangeId>("all");
@@ -124,6 +137,7 @@ export function WhatNeedsMe() {
 
   const { dismiss, snooze, restore } = useInboxDismissals(selectedCompanyId);
   const { pushToast } = useToastActions();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   // Date chips resolve to server-side activity bounds. Anchored to start-of-day,
@@ -461,6 +475,68 @@ export function WhatNeedsMe() {
     setSelectionFromKeyboard(false);
     setExpandedId((prev) => (prev === item.id ? null : item.id));
   }, []);
+
+  const historyDecisions = useMemo(
+    () => [...(decidedDecisions ?? []).slice(0, DECISION_HISTORY_VISIBLE_LIMIT), ...(expiredDecisions ?? []).slice(0, DECISION_HISTORY_VISIBLE_LIMIT)],
+    [decidedDecisions, expiredDecisions],
+  );
+  const historyDecisionTitleById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const decision of historyDecisions) map.set(decision.id, decision.title);
+    return map;
+  }, [historyDecisions]);
+  const hasDecisionHistory = historyDecisions.length > 0;
+
+  const toggleSelectedDecisionId = useCallback((decisionId: string) => {
+    setSelectedDecisionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(decisionId)) next.delete(decisionId);
+      else next.add(decisionId);
+      return next;
+    });
+  }, []);
+
+  const bulkDeleteDecisionsMutation = useMutation({
+    mutationFn: async (decisionIds: string[]) => {
+      const allResults: BulkDecisionItemResult[] = [];
+      for (let start = 0; start < decisionIds.length; start += 100) {
+        const response = await decisionsApi.bulkDelete(selectedCompanyId!, decisionIds.slice(start, start + 100));
+        allResults.push(...response.results);
+      }
+      return allResults;
+    },
+    onSuccess: async (results) => {
+      const deletedCount = results.filter((result) => result.ok).length;
+      const failedResults = results.filter((result) => !result.ok);
+      setSelectedDecisionIds(new Set());
+      setDecisionSelectMode(false);
+      await queryClient.invalidateQueries({ queryKey: ["decisions", selectedCompanyId!] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.attention(selectedCompanyId!) });
+      if (failedResults.length === 0) {
+        pushToast({
+          title: `Deleted ${deletedCount} decision ${deletedCount === 1 ? "record" : "records"}`,
+          tone: "success",
+        });
+      } else {
+        const failedSummary = failedResults
+          .slice(0, 5)
+          .map((result) => `"${historyDecisionTitleById.get(result.decisionId) ?? result.decisionId.slice(0, 8)}" ${result.error?.message ?? "unknown error"}`)
+          .join("; ");
+        pushToast({
+          title: `Deleted ${deletedCount} of ${results.length}`,
+          body: `Could not delete: ${failedSummary}${failedResults.length > 5 ? "; …" : ""}`,
+          tone: "error",
+        });
+      }
+    },
+    onError: (err) => {
+      pushToast({
+        title: "Bulk delete failed",
+        body: err instanceof Error ? err.message : "Unable to delete decisions",
+        tone: "error",
+      });
+    },
+  });
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const action = resolveAttentionQueueKeyAction({
@@ -710,6 +786,103 @@ export function WhatNeedsMe() {
       )}
 
       <div className="space-y-4">
+        {hasDecisionHistory ? (
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {decisionSelectMode ? (
+              <div
+                className="flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
+                data-testid="decision-bulk-bar"
+              >
+                <span className="mr-auto text-sm text-muted-foreground">
+                  {selectedDecisionIds.size} selected
+                </span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedDecisionIds(new Set(historyDecisions.map((decision) => decision.id)))}
+                >
+                  Select all
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedDecisionIds(new Set())}
+                  disabled={selectedDecisionIds.size === 0}
+                >
+                  Deselect all
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => setShowDecisionDeleteConfirm(true)}
+                  disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+                >
+                  Delete…
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setDecisionSelectMode(false);
+                    setSelectedDecisionIds(new Set());
+                  }}
+                >
+                  Done
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                aria-pressed={decisionSelectMode}
+                data-testid="decision-bulk-select-toggle"
+                onClick={() => {
+                  setDecisionSelectMode((enabled) => !enabled);
+                  setSelectedDecisionIds(new Set());
+                }}
+              >
+                <ListChecks className="h-3.5 w-3.5" />
+                Select
+              </Button>
+            )}
+          </div>
+        ) : null}
+
+        <Dialog open={showDecisionDeleteConfirm} onOpenChange={setShowDecisionDeleteConfirm}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete selected decision records?</DialogTitle>
+              <DialogDescription>
+                This permanently deletes {selectedDecisionIds.size} selected decision{" "}
+                {selectedDecisionIds.size === 1 ? "record" : "records"} and their execution
+                history. Tasks blocked by these records become deletable. This cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowDecisionDeleteConfirm(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+                onClick={() => {
+                  setShowDecisionDeleteConfirm(false);
+                  bulkDeleteDecisionsMutation.mutate([...selectedDecisionIds]);
+                }}
+              >
+                {bulkDeleteDecisionsMutation.isPending
+                  ? "Deleting…"
+                  : `Delete ${selectedDecisionIds.size} ${selectedDecisionIds.size === 1 ? "record" : "records"}`}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <Curtain
           label="Decided"
           count={decisionHistoryCount(decidedDecisions?.length)}
@@ -720,13 +893,25 @@ export function WhatNeedsMe() {
             <p className="text-xs text-muted-foreground">Loading decided decisions…</p>
           ) : (decidedDecisions?.length ?? 0) > 0 ? (
             decidedDecisions!.slice(0, DECISION_HISTORY_VISIBLE_LIMIT).map((decision) => (
-              <DecisionResolver
-                key={decision.id}
-                companyId={selectedCompanyId}
-                decisionId={decision.id}
-                agentMap={agentMap}
-                initialDecision={{ ...decision, executions: decision.executions ?? [] }}
-              />
+              <div key={decision.id} className={decisionSelectMode ? "flex items-start gap-2" : undefined}>
+                {decisionSelectMode ? (
+                  <Checkbox
+                    checked={selectedDecisionIds.has(decision.id)}
+                    onCheckedChange={() => toggleSelectedDecisionId(decision.id)}
+                    aria-label={`Select ${decision.title}`}
+                    data-testid="decision-bulk-select-checkbox"
+                    className="mt-1 shrink-0"
+                  />
+                ) : null}
+                <div className="min-w-0 flex-1">
+                  <DecisionResolver
+                    companyId={selectedCompanyId}
+                    decisionId={decision.id}
+                    agentMap={agentMap}
+                    initialDecision={{ ...decision, executions: decision.executions ?? [] }}
+                  />
+                </div>
+              </div>
             ))
           ) : (
             <p className="text-xs text-muted-foreground">No decided decisions.</p>
@@ -743,13 +928,25 @@ export function WhatNeedsMe() {
             <p className="text-xs text-muted-foreground">Loading expired decisions…</p>
           ) : (expiredDecisions?.length ?? 0) > 0 ? (
             expiredDecisions!.slice(0, DECISION_HISTORY_VISIBLE_LIMIT).map((decision) => (
-              <DecisionResolver
-                key={decision.id}
-                companyId={selectedCompanyId}
-                decisionId={decision.id}
-                agentMap={agentMap}
-                initialDecision={{ ...decision, executions: decision.executions ?? [] }}
-              />
+              <div key={decision.id} className={decisionSelectMode ? "flex items-start gap-2" : undefined}>
+                {decisionSelectMode ? (
+                  <Checkbox
+                    checked={selectedDecisionIds.has(decision.id)}
+                    onCheckedChange={() => toggleSelectedDecisionId(decision.id)}
+                    aria-label={`Select ${decision.title}`}
+                    data-testid="decision-bulk-select-checkbox"
+                    className="mt-1 shrink-0"
+                  />
+                ) : null}
+                <div className="min-w-0 flex-1">
+                  <DecisionResolver
+                    companyId={selectedCompanyId}
+                    decisionId={decision.id}
+                    agentMap={agentMap}
+                    initialDecision={{ ...decision, executions: decision.executions ?? [] }}
+                  />
+                </div>
+              </div>
             ))
           ) : (
             <p className="text-xs text-muted-foreground">No expired decisions.</p>

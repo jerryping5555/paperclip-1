@@ -218,6 +218,7 @@ export {
   updateDecisionTriageSchema,
   updateDecisionRetentionSchema,
   createDecisionArchiveProposalSchema,
+  bulkDecisionIdsSchema,
   type CreateDecisionQueueInput,
   type UpdateDecisionQueueInput,
   type AddDecisionQueueItemInput,
@@ -225,6 +226,7 @@ export {
   type UpdateDecisionTriageInput,
   type UpdateDecisionRetentionInput,
   type CreateDecisionArchiveProposalInput,
+  type BulkDecisionIds,
 } from "./validators/decision-queue.js";
 export type {
   DecisionTrainingExample,
@@ -1168,6 +1170,8 @@ export type {
   ClearIssueCommentsResponse,
   BulkDeleteIssueItemResult,
   BulkDeleteIssuesResponse,
+  BulkDecisionItemResult,
+  BulkDecisionResponse,
   SuggestedTaskDraft,
   SuggestTasksPayload,
   SuggestTasksResultCreatedTask,

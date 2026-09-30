@@ -1177,6 +1177,8 @@ The current app also exposes V1-supporting surfaces for:
   - `PATCH /companies/:companyId/decision-retention/:sourceKind/:sourceId` (Keep)
   - `POST /companies/:companyId/decision-retention/:sourceKind/:sourceId/archive|revive`
   - `POST /companies/:companyId/decision-archive-proposals`
+- `POST /companies/:companyId/decisions/bulk-dismiss` (board-only; per-item `{ decisionId, ok, error }` results)
+- `POST /companies/:companyId/decisions/bulk-delete` (board-only; hard-deletes decision records with cascading target links and effect executions; per-item results; logs `decision.deleted`)
 
 Queue and triage mutations accept board non-viewers and active standard-scope agents, apply responsible-user intersection for run JWTs, and reject low-trust, `task_bridge`, and `skill_test` contexts. Missing, cross-company, and unauthorized attention sources share the same not-found response.
 

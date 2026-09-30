@@ -3,11 +3,13 @@ import { z } from "zod";
 import type { Db } from "@paperclipai/db";
 import {
   createDecisionArchiveProposalSchema,
+  bulkDecisionIdsSchema,
   decisionInputsSchema,
   decisionOptionsSchema,
   type AttentionArchiveManifestEntry,
   type AttentionArchiveTargetSnapshot,
   type AttentionItem,
+  type BulkDecisionItemResult,
   type CreateDecisionArchiveProposalInput,
 } from "@paperclipai/shared";
 import { validate } from "../middleware/validate.js";
@@ -17,7 +19,7 @@ import { attentionService } from "../services/attention.js";
 import { authorizationDeniedDetails, authorizationService } from "../services/authorization.js";
 import { canReadDecisionSource } from "../services/decision-queues.js";
 import { hashAttentionArchiveManifest } from "../services/decision-retention.js";
-import { forbidden, unprocessable } from "../errors.js";
+import { forbidden, notFound, unprocessable } from "../errors.js";
 
 const createSchema = z.object({
   title: z.string().trim().min(1).max(500),
@@ -195,6 +197,60 @@ export function decisionRoutes(db: Db, options: DecisionServiceOptions) {
     const decision = await getAccessibleResource(req, res, svc.get(req.params.id as string), "Decision not found");
     if (!decision) return;
     const actor = getActorInfo(req); res.json(await svc.cancel(decision.id, { actorType: actor.actorType, actorId: actor.actorId, runId: actor.runId }));
+  });
+  router.post("/companies/:companyId/decisions/bulk-dismiss", validate(bulkDecisionIdsSchema), async (req, res) => {
+    const companyId = req.params.companyId as string;
+    const userId = boardUserId(req);
+    assertCompanyAccess(req, companyId);
+    const results: BulkDecisionItemResult[] = [];
+    for (const decisionId of req.body.decisionIds) {
+      try {
+        const decision = await svc.get(decisionId);
+        if (!decision || decision.companyId !== companyId) throw notFound("Decision not found");
+        await svc.dismiss(decisionId, userId, req.actor, null);
+        results.push({ decisionId, ok: true, error: null });
+      } catch (error) {
+        const httpError = error as { status?: number; message?: string; details?: { code?: string } };
+        results.push({
+          decisionId,
+          ok: false,
+          error: {
+            status: httpError.status ?? 500,
+            message: httpError.message ?? "Unknown error",
+            code: typeof httpError.details?.code === "string" ? httpError.details.code : undefined,
+          },
+        });
+      }
+    }
+    res.json({ results });
+  });
+  router.post("/companies/:companyId/decisions/bulk-delete", validate(bulkDecisionIdsSchema), async (req, res) => {
+    const companyId = req.params.companyId as string;
+    boardUserId(req);
+    assertCompanyAccess(req, companyId);
+    const actor = getActorInfo(req);
+    const results: BulkDecisionItemResult[] = [];
+    for (const decisionId of req.body.decisionIds) {
+      try {
+        const decision = await svc.get(decisionId);
+        if (!decision || decision.companyId !== companyId) throw notFound("Decision not found");
+        const removed = await svc.remove(decisionId, { actorType: actor.actorType, actorId: actor.actorId, runId: actor.runId });
+        if (!removed) throw notFound("Decision not found");
+        results.push({ decisionId, ok: true, error: null });
+      } catch (error) {
+        const httpError = error as { status?: number; message?: string; details?: { code?: string } };
+        results.push({
+          decisionId,
+          ok: false,
+          error: {
+            status: httpError.status ?? 500,
+            message: httpError.message ?? "Unknown error",
+            code: typeof httpError.details?.code === "string" ? httpError.details.code : undefined,
+          },
+        });
+      }
+    }
+    res.json({ results });
   });
   return router;
 }

@@ -1,4 +1,4 @@
-import type { DecisionInput, DecisionOption } from "@paperclipai/shared";
+import type { BulkDecisionResponse, DecisionInput, DecisionOption } from "@paperclipai/shared";
 import { api } from "./client";
 
 /**
@@ -111,4 +111,14 @@ export const decisionsApi = {
   dismiss: (id: string, reason?: string | null) =>
     api.post<DecisionOutcome>(`/decisions/${id}/dismiss`, reason ? { reason } : {}),
   cancel: (id: string) => api.post<Decision>(`/decisions/${id}/cancel`, {}),
+  bulkDismiss: (companyId: string, decisionIds: string[]) =>
+    api.post<BulkDecisionResponse>(
+      `/companies/${companyId}/decisions/bulk-dismiss`,
+      { decisionIds },
+    ),
+  bulkDelete: (companyId: string, decisionIds: string[]) =>
+    api.post<BulkDecisionResponse>(
+      `/companies/${companyId}/decisions/bulk-delete`,
+      { decisionIds },
+    ),
 };

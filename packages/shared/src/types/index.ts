@@ -726,6 +726,8 @@ export type {
   ClearIssueCommentsResponse,
   BulkDeleteIssueItemResult,
   BulkDeleteIssuesResponse,
+  BulkDecisionItemResult,
+  BulkDecisionResponse,
   SuggestedTaskDraft,
   SuggestTasksPayload,
   SuggestTasksResultCreatedTask,
