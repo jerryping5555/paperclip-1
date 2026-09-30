@@ -738,6 +738,122 @@ export function WhatNeedsMe() {
 
       {error && <p className="text-sm text-destructive">{(error as Error).message}</p>}
 
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {decisionSelectMode ? (
+          <div
+            className="sticky top-2 z-10 flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
+            data-testid="decision-bulk-bar"
+          >
+            <span className="mr-auto text-sm text-muted-foreground">
+              {bulkSelectionCount} selected
+            </span>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                setSelectedAttentionIds(new Set(openFeedItems.map((item) => item.id)));
+                setSelectedDecisionIds(new Set([
+                  ...historyDecisions.map((decision) => decision.id),
+                  ...openFeedDecisionItems.map((item) => item.subject.id),
+                ]));
+              }}
+            >
+              Select all
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                setSelectedDecisionIds(new Set());
+                setSelectedAttentionIds(new Set());
+              }}
+              disabled={bulkSelectionCount === 0}
+            >
+              Deselect all
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={dismissSelectedAttentionItems}
+              disabled={selectedAttentionIds.size === 0}
+            >
+              Dismiss from desk
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={() => bulkDismissDecisionsMutation.mutate(selectedOpenDecisionIds)}
+              disabled={selectedOpenDecisionIds.length === 0 || bulkDismissDecisionsMutation.isPending}
+            >
+              {bulkDismissDecisionsMutation.isPending ? "Dismissing…" : `Dismiss${selectedOpenDecisionIds.length > 0 ? ` ${selectedOpenDecisionIds.length}` : ""}`}
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="destructive"
+              onClick={() => setShowDecisionDeleteConfirm(true)}
+              disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+            >
+              Delete…
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              onClick={exitDecisionSelectMode}
+            >
+              Done
+            </Button>
+          </div>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            aria-pressed={decisionSelectMode}
+            data-testid="decision-bulk-select-toggle"
+            onClick={enterDecisionSelectMode}
+          >
+            <ListChecks className="h-3.5 w-3.5" />
+            Select
+          </Button>
+        )}
+      </div>
+
+      <Dialog open={showDecisionDeleteConfirm} onOpenChange={setShowDecisionDeleteConfirm}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete selected decision records?</DialogTitle>
+            <DialogDescription>
+              This permanently deletes {selectedDecisionIds.size} selected decision{" "}
+              {selectedDecisionIds.size === 1 ? "record" : "records"} and their execution
+              history. Tasks blocked by these records become deletable. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDecisionDeleteConfirm(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+              onClick={() => {
+                setShowDecisionDeleteConfirm(false);
+                bulkDeleteDecisionsMutation.mutate([...selectedDecisionIds]);
+              }}
+            >
+              {bulkDeleteDecisionsMutation.isPending
+                ? "Deleting…"
+                : `Delete ${selectedDecisionIds.size} ${selectedDecisionIds.size === 1 ? "record" : "records"}`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {!hasAnything ? (
         <ZeroState />
       ) : (
@@ -927,122 +1043,6 @@ export function WhatNeedsMe() {
       )}
 
       <div className="space-y-4">
-        <div className="flex flex-wrap items-center justify-end gap-2">
-          {decisionSelectMode ? (
-            <div
-              className="flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
-              data-testid="decision-bulk-bar"
-            >
-                <span className="mr-auto text-sm text-muted-foreground">
-                  {bulkSelectionCount} selected
-                </span>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setSelectedAttentionIds(new Set(openFeedItems.map((item) => item.id)));
-                    setSelectedDecisionIds(new Set([
-                      ...historyDecisions.map((decision) => decision.id),
-                      ...openFeedDecisionItems.map((item) => item.subject.id),
-                    ]));
-                  }}
-                >
-                  Select all
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setSelectedDecisionIds(new Set());
-                    setSelectedAttentionIds(new Set());
-                  }}
-                  disabled={bulkSelectionCount === 0}
-                >
-                  Deselect all
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={dismissSelectedAttentionItems}
-                  disabled={selectedAttentionIds.size === 0}
-                >
-                  Dismiss from desk
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => bulkDismissDecisionsMutation.mutate(selectedOpenDecisionIds)}
-                  disabled={selectedOpenDecisionIds.length === 0 || bulkDismissDecisionsMutation.isPending}
-                >
-                  {bulkDismissDecisionsMutation.isPending ? "Dismissing…" : `Dismiss${selectedOpenDecisionIds.length > 0 ? ` ${selectedOpenDecisionIds.length}` : ""}`}
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => setShowDecisionDeleteConfirm(true)}
-                  disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
-                >
-                  Delete…
-                </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={exitDecisionSelectMode}
-              >
-                Done
-              </Button>
-            </div>
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              aria-pressed={decisionSelectMode}
-              data-testid="decision-bulk-select-toggle"
-              onClick={enterDecisionSelectMode}
-            >
-              <ListChecks className="h-3.5 w-3.5" />
-              Select
-            </Button>
-          )}
-        </div>
-
-        <Dialog open={showDecisionDeleteConfirm} onOpenChange={setShowDecisionDeleteConfirm}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Delete selected decision records?</DialogTitle>
-              <DialogDescription>
-                This permanently deletes {selectedDecisionIds.size} selected decision{" "}
-                {selectedDecisionIds.size === 1 ? "record" : "records"} and their execution
-                history. Tasks blocked by these records become deletable. This cannot be undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setShowDecisionDeleteConfirm(false)}>
-                Cancel
-              </Button>
-              <Button
-                variant="destructive"
-                disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
-                onClick={() => {
-                  setShowDecisionDeleteConfirm(false);
-                  bulkDeleteDecisionsMutation.mutate([...selectedDecisionIds]);
-                }}
-              >
-                {bulkDeleteDecisionsMutation.isPending
-                  ? "Deleting…"
-                  : `Delete ${selectedDecisionIds.size} ${selectedDecisionIds.size === 1 ? "record" : "records"}`}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
         <Curtain
           label="Decided"
           count={decisionHistoryCount(decidedDecisions?.length)}
