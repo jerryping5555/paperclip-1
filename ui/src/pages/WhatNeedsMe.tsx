@@ -120,6 +120,7 @@ export function WhatNeedsMe() {
   const [expiredOpen, setExpiredOpen] = useState(false);
   const [decisionSelectMode, setDecisionSelectMode] = useState(false);
   const [selectedDecisionIds, setSelectedDecisionIds] = useState<Set<string>>(() => new Set());
+  const [selectedAttentionIds, setSelectedAttentionIds] = useState<Set<string>>(() => new Set());
   const [showDecisionDeleteConfirm, setShowDecisionDeleteConfirm] = useState(false);
 
   // Date-range chips (PAP-16032 §4.2) — resolve to server-side activity bounds.
@@ -484,6 +485,19 @@ export function WhatNeedsMe() {
     () => [...renderPlan.groupRows.values()].flat().filter((item) => item.sourceKind === "decision"),
     [renderPlan],
   );
+  const openFeedItems = useMemo(
+    () => [...renderPlan.groupRows.values()].flat(),
+    [renderPlan],
+  );
+  const openFeedItemById = useMemo(() => {
+    const map = new Map<string, AttentionItem>();
+    for (const item of openFeedItems) map.set(item.id, item);
+    return map;
+  }, [openFeedItems]);
+  const openFeedDecisionIdSet = useMemo(
+    () => new Set(openFeedDecisionItems.map((item) => item.subject.id)),
+    [openFeedDecisionItems],
+  );
   const selectableDecisionTitleById = useMemo(() => {
     const map = new Map<string, string>();
     for (const decision of historyDecisions) map.set(decision.id, decision.title);
@@ -495,11 +509,13 @@ export function WhatNeedsMe() {
     setDecidedOpen(true);
     setExpiredOpen(true);
     setSelectedDecisionIds(new Set());
+    setSelectedAttentionIds(new Set());
     setDecisionSelectMode(true);
   }, []);
   const exitDecisionSelectMode = useCallback(() => {
     setDecisionSelectMode(false);
     setSelectedDecisionIds(new Set());
+    setSelectedAttentionIds(new Set());
   }, []);
 
   const toggleSelectedDecisionId = useCallback((decisionId: string) => {
@@ -510,6 +526,45 @@ export function WhatNeedsMe() {
       return next;
     });
   }, []);
+
+  const toggleSelectedAttentionItem = useCallback((item: AttentionItem) => {
+    setSelectedAttentionIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(item.id)) next.delete(item.id);
+      else next.add(item.id);
+      return next;
+    });
+    if (item.sourceKind === "decision") toggleSelectedDecisionId(item.subject.id);
+  }, [toggleSelectedDecisionId]);
+
+  const selectedOpenDecisionIds = useMemo(
+    () => [...selectedDecisionIds].filter((id) => openFeedDecisionIdSet.has(id)),
+    [selectedDecisionIds, openFeedDecisionIdSet],
+  );
+  const selectedHistoryDecisionIds = useMemo(
+    () => [...selectedDecisionIds].filter((id) => !openFeedDecisionIdSet.has(id)),
+    [selectedDecisionIds, openFeedDecisionIdSet],
+  );
+  const bulkSelectionCount = selectedAttentionIds.size + selectedHistoryDecisionIds.length;
+
+  const dismissSelectedAttentionItems = useCallback(() => {
+    const items = [...selectedAttentionIds]
+      .map((id) => openFeedItemById.get(id))
+      .filter((item): item is AttentionItem => item != null);
+    if (items.length === 0) return;
+    setPendingHide((prev) => {
+      const next = new Set(prev);
+      for (const item of items) next.add(item.id);
+      return next;
+    });
+    for (const item of items) dismiss(item.dismissalKey);
+    pushToast({
+      title: `Dismissed ${items.length} ${items.length === 1 ? "item" : "items"} from the desk`,
+      body: "Find them again under Dismissed, with Restore on each row.",
+      tone: "success",
+    });
+    exitDecisionSelectMode();
+  }, [selectedAttentionIds, openFeedItemById, dismiss, pushToast, exitDecisionSelectMode]);
 
   const bulkDeleteDecisionsMutation = useMutation({
     mutationFn: async (decisionIds: string[]) => {
@@ -739,12 +794,12 @@ export function WhatNeedsMe() {
                             <Fragment key={item.id}>
                               {header}
                               <div className={bundleId ? "border-l-2 border-violet-500/40 pl-3" : undefined}>
-                                {decisionSelectMode && item.sourceKind === "decision" ? (
+                                {decisionSelectMode ? (
                                   <div className="flex items-start gap-2">
                                     <Checkbox
-                                      checked={selectedDecisionIds.has(item.subject.id)}
-                                      onCheckedChange={() => toggleSelectedDecisionId(item.subject.id)}
-                                      aria-label={`Select ${item.subject.title ?? "decision"}`}
+                                      checked={selectedAttentionIds.has(item.id)}
+                                      onCheckedChange={() => toggleSelectedAttentionItem(item)}
+                                      aria-label={`Select ${item.subject.title ?? "desk item"}`}
                                       data-testid="decision-bulk-select-checkbox"
                                       className="mt-1 shrink-0"
                                     />
@@ -878,37 +933,52 @@ export function WhatNeedsMe() {
               className="flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
               data-testid="decision-bulk-bar"
             >
-              <span className="mr-auto text-sm text-muted-foreground">
-                {selectedDecisionIds.size} selected
-              </span>
+                <span className="mr-auto text-sm text-muted-foreground">
+                  {bulkSelectionCount} selected
+                </span>
                 <Button
                   type="button"
                   size="sm"
                   variant="ghost"
-                  onClick={() => setSelectedDecisionIds(new Set([
-                    ...historyDecisions.map((decision) => decision.id),
-                    ...openFeedDecisionItems.map((item) => item.subject.id),
-                  ]))}
+                  onClick={() => {
+                    setSelectedAttentionIds(new Set(openFeedItems.map((item) => item.id)));
+                    setSelectedDecisionIds(new Set([
+                      ...historyDecisions.map((decision) => decision.id),
+                      ...openFeedDecisionItems.map((item) => item.subject.id),
+                    ]));
+                  }}
                 >
                   Select all
                 </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={() => setSelectedDecisionIds(new Set())}
-                disabled={selectedDecisionIds.size === 0}
-              >
-                Deselect all
-              </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setSelectedDecisionIds(new Set());
+                    setSelectedAttentionIds(new Set());
+                  }}
+                  disabled={bulkSelectionCount === 0}
+                >
+                  Deselect all
+                </Button>
                 <Button
                   type="button"
                   size="sm"
                   variant="outline"
-                  onClick={() => bulkDismissDecisionsMutation.mutate([...selectedDecisionIds])}
-                  disabled={selectedDecisionIds.size === 0 || bulkDismissDecisionsMutation.isPending}
+                  onClick={dismissSelectedAttentionItems}
+                  disabled={selectedAttentionIds.size === 0}
                 >
-                  {bulkDismissDecisionsMutation.isPending ? "Dismissing…" : "Dismiss"}
+                  Dismiss from desk
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => bulkDismissDecisionsMutation.mutate(selectedOpenDecisionIds)}
+                  disabled={selectedOpenDecisionIds.length === 0 || bulkDismissDecisionsMutation.isPending}
+                >
+                  {bulkDismissDecisionsMutation.isPending ? "Dismissing…" : `Dismiss${selectedOpenDecisionIds.length > 0 ? ` ${selectedOpenDecisionIds.length}` : ""}`}
                 </Button>
                 <Button
                   type="button"
