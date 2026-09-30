@@ -485,7 +485,17 @@ export function WhatNeedsMe() {
     for (const decision of historyDecisions) map.set(decision.id, decision.title);
     return map;
   }, [historyDecisions]);
-  const hasDecisionHistory = historyDecisions.length > 0;
+
+  const enterDecisionSelectMode = useCallback(() => {
+    setDecidedOpen(true);
+    setExpiredOpen(true);
+    setSelectedDecisionIds(new Set());
+    setDecisionSelectMode(true);
+  }, []);
+  const exitDecisionSelectMode = useCallback(() => {
+    setDecisionSelectMode(false);
+    setSelectedDecisionIds(new Set());
+  }, []);
 
   const toggleSelectedDecisionId = useCallback((decisionId: string) => {
     setSelectedDecisionIds((prev) => {
@@ -786,72 +796,64 @@ export function WhatNeedsMe() {
       )}
 
       <div className="space-y-4">
-        {hasDecisionHistory ? (
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            {decisionSelectMode ? (
-              <div
-                className="flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
-                data-testid="decision-bulk-bar"
-              >
-                <span className="mr-auto text-sm text-muted-foreground">
-                  {selectedDecisionIds.size} selected
-                </span>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setSelectedDecisionIds(new Set(historyDecisions.map((decision) => decision.id)))}
-                >
-                  Select all
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => setSelectedDecisionIds(new Set())}
-                  disabled={selectedDecisionIds.size === 0}
-                >
-                  Deselect all
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => setShowDecisionDeleteConfirm(true)}
-                  disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
-                >
-                  Delete…
-                </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    setDecisionSelectMode(false);
-                    setSelectedDecisionIds(new Set());
-                  }}
-                >
-                  Done
-                </Button>
-              </div>
-            ) : (
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {decisionSelectMode ? (
+            <div
+              className="flex w-full flex-wrap items-center gap-2 rounded-md border border-border bg-background/95 px-3 py-2 shadow-sm backdrop-blur"
+              data-testid="decision-bulk-bar"
+            >
+              <span className="mr-auto text-sm text-muted-foreground">
+                {selectedDecisionIds.size} selected
+              </span>
               <Button
                 type="button"
-                variant="outline"
                 size="sm"
-                aria-pressed={decisionSelectMode}
-                data-testid="decision-bulk-select-toggle"
-                onClick={() => {
-                  setDecisionSelectMode((enabled) => !enabled);
-                  setSelectedDecisionIds(new Set());
-                }}
+                variant="ghost"
+                onClick={() => setSelectedDecisionIds(new Set(historyDecisions.map((decision) => decision.id)))}
               >
-                <ListChecks className="h-3.5 w-3.5" />
-                Select
+                Select all
               </Button>
-            )}
-          </div>
-        ) : null}
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={() => setSelectedDecisionIds(new Set())}
+                disabled={selectedDecisionIds.size === 0}
+              >
+                Deselect all
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                onClick={() => setShowDecisionDeleteConfirm(true)}
+                disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+              >
+                Delete…
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={exitDecisionSelectMode}
+              >
+                Done
+              </Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              aria-pressed={decisionSelectMode}
+              data-testid="decision-bulk-select-toggle"
+              onClick={enterDecisionSelectMode}
+            >
+              <ListChecks className="h-3.5 w-3.5" />
+              Select
+            </Button>
+          )}
+        </div>
 
         <Dialog open={showDecisionDeleteConfirm} onOpenChange={setShowDecisionDeleteConfirm}>
           <DialogContent className="sm:max-w-md">
