@@ -480,11 +480,16 @@ export function WhatNeedsMe() {
     () => [...(decidedDecisions ?? []).slice(0, DECISION_HISTORY_VISIBLE_LIMIT), ...(expiredDecisions ?? []).slice(0, DECISION_HISTORY_VISIBLE_LIMIT)],
     [decidedDecisions, expiredDecisions],
   );
-  const historyDecisionTitleById = useMemo(() => {
+  const openFeedDecisionItems = useMemo(
+    () => [...renderPlan.groupRows.values()].flat().filter((item) => item.sourceKind === "decision"),
+    [renderPlan],
+  );
+  const selectableDecisionTitleById = useMemo(() => {
     const map = new Map<string, string>();
     for (const decision of historyDecisions) map.set(decision.id, decision.title);
+    for (const item of openFeedDecisionItems) map.set(item.subject.id, item.subject.title ?? item.subject.id);
     return map;
-  }, [historyDecisions]);
+  }, [historyDecisions, openFeedDecisionItems]);
 
   const enterDecisionSelectMode = useCallback(() => {
     setDecidedOpen(true);
@@ -530,7 +535,7 @@ export function WhatNeedsMe() {
       } else {
         const failedSummary = failedResults
           .slice(0, 5)
-          .map((result) => `"${historyDecisionTitleById.get(result.decisionId) ?? result.decisionId.slice(0, 8)}" ${result.error?.message ?? "unknown error"}`)
+          .map((result) => `"${selectableDecisionTitleById.get(result.decisionId) ?? result.decisionId.slice(0, 8)}" ${result.error?.message ?? "unknown error"}`)
           .join("; ");
         pushToast({
           title: `Deleted ${deletedCount} of ${results.length}`,
@@ -543,6 +548,50 @@ export function WhatNeedsMe() {
       pushToast({
         title: "Bulk delete failed",
         body: err instanceof Error ? err.message : "Unable to delete decisions",
+        tone: "error",
+      });
+    },
+  });
+
+  const bulkDismissDecisionsMutation = useMutation({
+    mutationFn: async (decisionIds: string[]) => {
+      const allResults: BulkDecisionItemResult[] = [];
+      for (let start = 0; start < decisionIds.length; start += 100) {
+        const response = await decisionsApi.bulkDismiss(selectedCompanyId!, decisionIds.slice(start, start + 100));
+        allResults.push(...response.results);
+      }
+      return allResults;
+    },
+    onSuccess: async (results) => {
+      const dismissedCount = results.filter((result) => result.ok).length;
+      const failedResults = results.filter((result) => !result.ok);
+      setSelectedDecisionIds(new Set());
+      setDecisionSelectMode(false);
+      await queryClient.invalidateQueries({ queryKey: ["decisions", selectedCompanyId!] });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.attention(selectedCompanyId!) });
+      if (failedResults.length === 0) {
+        pushToast({
+          title: `Dismissed ${dismissedCount} decision ${dismissedCount === 1 ? "record" : "records"}`,
+          tone: "success",
+        });
+      } else {
+        const reasonFor = (result: BulkDecisionItemResult) =>
+          result.error?.code === "decision_already_resolved" ? "already closed" : (result.error?.message ?? "unknown error");
+        const failedSummary = failedResults
+          .slice(0, 5)
+          .map((result) => `"${selectableDecisionTitleById.get(result.decisionId) ?? result.decisionId.slice(0, 8)}" ${reasonFor(result)}`)
+          .join("; ");
+        pushToast({
+          title: `Dismissed ${dismissedCount} of ${results.length}`,
+          body: `Could not dismiss: ${failedSummary}${failedResults.length > 5 ? "; …" : ""}`,
+          tone: "error",
+        });
+      }
+    },
+    onError: (err) => {
+      pushToast({
+        title: "Bulk dismiss failed",
+        body: err instanceof Error ? err.message : "Unable to dismiss decisions",
         tone: "error",
       });
     },
@@ -690,19 +739,46 @@ export function WhatNeedsMe() {
                             <Fragment key={item.id}>
                               {header}
                               <div className={bundleId ? "border-l-2 border-violet-500/40 pl-3" : undefined}>
-                                <AttentionQueueRow
-                                  item={item}
-                                  companyId={selectedCompanyId}
-                                  expanded={expandedId === item.id}
-                                  onToggleExpand={handleToggleExpand}
-                                  onDismiss={handleDismiss}
-                                  onSnooze={handleSnooze}
-                                  agentMap={agentMap}
-                                  agents={agents}
-                                  showTriage
-                                  currentUserId={currentUserId}
-                                  selected={selectionFromKeyboard && selectedAttentionId === item.id}
-                                />
+                                {decisionSelectMode && item.sourceKind === "decision" ? (
+                                  <div className="flex items-start gap-2">
+                                    <Checkbox
+                                      checked={selectedDecisionIds.has(item.subject.id)}
+                                      onCheckedChange={() => toggleSelectedDecisionId(item.subject.id)}
+                                      aria-label={`Select ${item.subject.title ?? "decision"}`}
+                                      data-testid="decision-bulk-select-checkbox"
+                                      className="mt-1 shrink-0"
+                                    />
+                                    <div className="min-w-0 flex-1">
+                                      <AttentionQueueRow
+                                        item={item}
+                                        companyId={selectedCompanyId}
+                                        expanded={expandedId === item.id}
+                                        onToggleExpand={handleToggleExpand}
+                                        onDismiss={handleDismiss}
+                                        onSnooze={handleSnooze}
+                                        agentMap={agentMap}
+                                        agents={agents}
+                                        showTriage
+                                        currentUserId={currentUserId}
+                                        selected={selectionFromKeyboard && selectedAttentionId === item.id}
+                                      />
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <AttentionQueueRow
+                                    item={item}
+                                    companyId={selectedCompanyId}
+                                    expanded={expandedId === item.id}
+                                    onToggleExpand={handleToggleExpand}
+                                    onDismiss={handleDismiss}
+                                    onSnooze={handleSnooze}
+                                    agentMap={agentMap}
+                                    agents={agents}
+                                    showTriage
+                                    currentUserId={currentUserId}
+                                    selected={selectionFromKeyboard && selectedAttentionId === item.id}
+                                  />
+                                )}
                               </div>
                             </Fragment>
                           );
@@ -805,14 +881,17 @@ export function WhatNeedsMe() {
               <span className="mr-auto text-sm text-muted-foreground">
                 {selectedDecisionIds.size} selected
               </span>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={() => setSelectedDecisionIds(new Set(historyDecisions.map((decision) => decision.id)))}
-              >
-                Select all
-              </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setSelectedDecisionIds(new Set([
+                    ...historyDecisions.map((decision) => decision.id),
+                    ...openFeedDecisionItems.map((item) => item.subject.id),
+                  ]))}
+                >
+                  Select all
+                </Button>
               <Button
                 type="button"
                 size="sm"
@@ -822,15 +901,24 @@ export function WhatNeedsMe() {
               >
                 Deselect all
               </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="destructive"
-                onClick={() => setShowDecisionDeleteConfirm(true)}
-                disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
-              >
-                Delete…
-              </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => bulkDismissDecisionsMutation.mutate([...selectedDecisionIds])}
+                  disabled={selectedDecisionIds.size === 0 || bulkDismissDecisionsMutation.isPending}
+                >
+                  {bulkDismissDecisionsMutation.isPending ? "Dismissing…" : "Dismiss"}
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => setShowDecisionDeleteConfirm(true)}
+                  disabled={selectedDecisionIds.size === 0 || bulkDeleteDecisionsMutation.isPending}
+                >
+                  Delete…
+                </Button>
               <Button
                 type="button"
                 size="sm"
